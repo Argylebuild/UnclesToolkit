@@ -127,6 +127,20 @@ namespace Argyle.Utilities
 		}
 
 		/// <summary>
+		/// The float-friendly add to average. E.G. for time-series without perfectly even samples. 
+		/// As the sample size grows, this method adds the new value and properly appends the data
+		/// Adjusting the average using the proper scale without needing the entire data set.
+		/// </summary>
+		/// <param name="average">The existing average value</param>
+		/// <param name="newDataPoint">Add this number to the running averaage</param>
+		/// <param name="oldSampleSize">The sample size before this new addition</param>
+		/// <param name="deltaSampleSize">The total sample size after this new addition.</param>
+		/// <returns></returns>
+		public static float AddToAverage(this float average, 
+			float newDataPoint, float oldSampleSize, float deltaSampleSize) => 
+			(average * oldSampleSize + newDataPoint * deltaSampleSize) / (oldSampleSize + deltaSampleSize);
+
+		/// <summary>
 		/// As the sample size grows, this method adds the new value and properly appends the data
 		/// Adjusting the average using the proper scale without needing the entire data set. 
 		/// </summary>
