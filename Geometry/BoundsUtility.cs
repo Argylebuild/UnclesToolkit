@@ -8,20 +8,49 @@ namespace Argyle.Utilities.Geometry
 		#region ==== Bounds Extensions ====
 
 		/// <summary>
-		/// A version of encapsulation that disregards the original bounds if it is effectively null. 
+		/// A version of encapsulation that disregards the original bounds if it is effectively null.
+		/// Also disregards the added bounds if it is default. 
 		/// </summary>
-		/// <param name="b"></param>
+		/// <param name="b1"></param>
 		/// <param name="b2"></param>
 		/// <returns></returns>
-		public static Bounds SafeEncapsulate(this Bounds b, Bounds b2)
+		public static Bounds SafeEncapsulate(this Bounds b1, Bounds b2)
 		{
-			if (b.size == Vector3.zero && b.center == Vector3.zero)
-			{
+			if (b1.size == Vector3.zero && b1.center == Vector3.zero)
 				return b2;
-			}
-			b.Encapsulate(b2);
-			return b;
+
+			if (b2.size == Vector3.zero && b2.center == Vector3.zero)
+				return b1;
+			
+			b1.Encapsulate(b2);
+			return b1;
 		}
+
+		public static Bounds SafeEncapsulate(this Bounds b1, BoundsNullable b2)
+		{
+			if (b2 != null)
+				b1.SafeEncapsulate(b2.b);
+			return b1;
+		}
+
+		public static BoundsNullable SafeEncapsulate(this BoundsNullable b1, Bounds b2)
+		{
+			if(b1 != null)
+			{
+				b1.b.SafeEncapsulate(b2);
+				return b1;
+			}
+				
+			return new BoundsNullable(b2);
+		}
+
+		public static BoundsNullable SafeEncapsulate(this BoundsNullable b1, BoundsNullable b2)
+		{
+			if (b2 != null)
+				b1.SafeEncapsulate(b2);
+			return b1;
+		}
+
 
 		/// <summary>
 		/// A version of encapsulation that disregards the original bounds if it is effectively null.
@@ -38,6 +67,33 @@ namespace Argyle.Utilities.Geometry
 				return b;
 			}
 			b.Encapsulate(point);
+			return b;
+		}
+
+		public static Bounds AverageEncapsulate(this Bounds b1, Bounds b2, int sampleSize)
+		{
+			Bounds original = b1;
+			Bounds total = b1.SafeEncapsulate(b2);
+
+			b1.center = new Vector3(
+				original.center.x.AddToAverage(total.center.x, sampleSize),
+				original.center.y.AddToAverage(total.center.y, sampleSize),
+				original.center.z.AddToAverage(total.center.z, sampleSize)
+			);
+
+			b1.size = new Vector3(
+				original.size.x.AddToAverage(total.size.x, sampleSize),
+				original.size.y.AddToAverage(total.size.y, sampleSize),
+				original.size.z.AddToAverage(total.size.z, sampleSize)
+			);
+
+			return b1;
+		}
+		
+
+		public static BoundsNullable SafeEncapsulate(this BoundsNullable b, Vector3 point)
+		{
+			b.b.SafeEncapsulate(point);
 			return b;
 		}
 
@@ -75,6 +131,9 @@ namespace Argyle.Utilities.Geometry
 			       bounds.size == Vector3.zero;
 		}
 
+
+		public static BoundsNullable ToNullable(this Bounds b) => new BoundsNullable(b);
+		
 		#endregion /Bounds Extensions ====
 
 		
@@ -104,4 +163,75 @@ namespace Argyle.Utilities.Geometry
 		
 		
 	}
+
+	/// <summary>
+	/// Safer for situations where bounds may not exist and should not be included in calculations.
+	/// WARNING: boxing structs can cause performance problems at scale.
+	/// TODO: fill out documentation for properties and methods.
+	/// </summary>
+	public class BoundsNullable
+	{
+		public Bounds b;
+
+		#region ==== Properties ====-------------------------------------
+
+		public Vector3 center => b.center;
+		public Vector3 extents => b.extents;
+		public Vector3 max => b.max;
+		public Vector3 min => b.min;
+		public Vector3 size => b.size;
+		
+
+		#endregion -------------------------------/Properties ====
+
+
+		#region ==== CTOR ====---------------------------------
+
+		public BoundsNullable(Vector3 center, Vector3 size)
+		{
+			b = new Bounds(center, size);
+		}
+
+		public BoundsNullable(Bounds bounds)
+		{
+			b = bounds;
+		}
+
+		#endregion ----------------------/CTOR ====
+
+
+		#region ==== Methods ====--------------------------------
+
+		public Vector3 ClosestPoint(Vector3 point) => b.ClosestPoint(point);
+
+		public bool Contains(Vector3 point) => b.Contains(point);
+
+		public void Encapsulate(Vector3 point) => b.Encapsulate(point);
+
+		public void Expand(float amount) => b.Expand(amount);
+
+		public bool IntersectRay(Ray ray) => b.IntersectRay(ray);
+
+		public bool Intersects(Bounds bounds) => b.Intersects(bounds);
+
+		public bool Intersects(BoundsNullable boundsNullable) => b.Intersects(boundsNullable.b);
+
+		public void SetMinMax(Vector3 min, Vector3 max) => b.SetMinMax(min, max);
+
+		public float SqrDistance(Vector3 point) => b.SqrDistance(point);
+
+		public string ToString() => b.ToString();
+
+
+		#endregion -------------------/Methods ====
+
+
+		#region ==== Extension Methods ====-----------------------
+
+
+		#endregion --------------------------/Extension Methods ====
+
+
+	}
+	
 }
