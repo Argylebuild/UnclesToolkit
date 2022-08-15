@@ -121,26 +121,32 @@ namespace Argyle.Utilities.Geometry
 		/// <summary>
 		/// Convert to only y,z components ofthe vector3
 		/// </summary>
-		public static Vector3 RemoveX(this Vector3 v3)
-		{
-			return new Vector3(0, v3.y, v3.z);
-		}
+		public static Vector3 RemoveX(this Vector3 v3) => new Vector3(0, v3.y, v3.z);
 
 		/// <summary>
 		/// Convert to only x,z components ofthe vector3
 		/// </summary>
-		public static Vector3 RemoveY(this Vector3 v3)
-		{
-			return new Vector3(v3.x, 0, v3.z);
-		}
+		public static Vector3 RemoveY(this Vector3 v3) => new Vector3(v3.x, 0, v3.z);
 
 		/// <summary>
 		/// Convert to only x,y components ofthe vector3
 		/// </summary>
-		public static Vector3 RemoveZ(this Vector3 v3)
+		public static Vector3 RemoveZ(this Vector3 v3) => new Vector3(v3.x, v3.y, 0);
+
+		/// <summary>
+		/// Weighted distance measurement. Exaggerates the vertical to favor horizontal closeness. 
+		/// </summary>
+		/// <param name="v1"></param>
+		/// <param name="v2"></param>
+		/// <returns></returns>
+		public static float DistanceYWeighted(Vector3 v1, Vector3 v2)
 		{
-			return new Vector3(v3.x, v3.y, 0);
+			float deltaY = v2.y - v1.y;
+			Vector3 v2e = new Vector3(v2.x, v1.y + Mathf.Pow(deltaY, 3), v2.z);
+
+			return Vector3.Distance(v1, v2);
 		}
+		
 
 		/// <summary>
 		/// Get the point directly between this v3 and another.
