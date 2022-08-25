@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using API;
 using Argyle.APIClient;
+using Argyle.UI.Dialogue;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -41,6 +42,19 @@ namespace Argyle.Utilities
 			return _directoryPath;
 		}
 
+		public DirectoryInfo DirectoryInfo
+		{
+			get
+			{
+				if (_directoryInfo == null)
+					_directoryInfo = new DirectoryInfo(DirectoryPath());
+
+				return _directoryInfo;
+			}
+		}
+
+		private DirectoryInfo _directoryInfo;
+		
 		public SecureStore()
 		{
 			_directoryPath = $"{Application.persistentDataPath}{Path.DirectorySeparatorChar}" +
@@ -157,6 +171,25 @@ namespace Argyle.Utilities
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Extreme measure to delete all store content and start over. 
+		/// </summary>
+		/// <returns>Was the delete successful?</returns>
+		public bool Clear()
+		{
+			Directory.Delete(DirectoryPath(),true);
+
+			if(Directory.GetFiles(DirectoryPath()).Length == 0)
+				return true;
+			else
+			{
+				DialogueManager.ErrorDialogue.Show(
+					"Unable to fully delete app data. " +
+					"Contents might be protected by the OS. Uninstall may be required.");
+				return false;
+			}
 		}
 	}
 }
