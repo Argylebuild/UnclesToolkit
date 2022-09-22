@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Argyle.Utilities
@@ -9,6 +10,24 @@ namespace Argyle.Utilities
     {
         private bool isReferenceSet = false;
         private Transform _tForm;
+
+        protected void Awake()
+        {
+            WaitForPostStart();
+        }
+
+        private async void WaitForPostStart()
+        {
+            await UniTask.NextFrame();
+            PostStart();
+        }
+        
+        /// <summary>
+        /// Runs after first frame (so after awake, onEnable, and start) for functions that rely on established setup.
+        /// </summary>
+        protected virtual async void PostStart()
+        {
+        }
 
         /// <summary>
         /// Pre-populated transform reference for improved performance.

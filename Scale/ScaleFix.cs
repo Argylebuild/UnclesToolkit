@@ -7,9 +7,9 @@ using UnityEngine;
 
 public class ScaleFix : ArgyleComponent
 {
-    [Tooltip("Drag in a ScaleFactor scriptable object asset to control scaling factor")]
-    [SerializeField] private ScaleFactor scaleFactor;
-    
+    [Tooltip("Drag in a ScaleFactor scriptable object asset to control scaling factor")] [field: SerializeField]
+    public ScaleFactor Factor;
+
     [Tooltip("EG scaling up a camera transform in inverse makes the world larger.")]
     [SerializeField] private bool isInverse;
     /// <summary>
@@ -39,11 +39,11 @@ public class ScaleFix : ArgyleComponent
     {
         if (IsInverse)
         {
-            TForm.localScale = Vector3.one / scaleFactor.Factor;    
+            TForm.localScale = Vector3.one / Factor.Factor;    
         }
         else
         {
-            TForm.localScale = Vector3.one * scaleFactor.Factor;
+            TForm.localScale = Vector3.one * Factor.Factor;
         }
     }
 }

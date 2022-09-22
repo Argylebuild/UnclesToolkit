@@ -69,8 +69,9 @@ namespace Argyle.Utilities
         }
         
         
-        protected void Awake()
+        protected new void Awake()
         {
+            base.Awake();
             Setup();
         }
 
