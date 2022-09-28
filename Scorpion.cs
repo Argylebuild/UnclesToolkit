@@ -31,7 +31,7 @@ namespace Argyle.Utilities
         
         
         [Button]
-        public void GetOverHere()
+        public async void GetOverHere()
         {
             if(Target != null)
             {
@@ -39,6 +39,8 @@ namespace Argyle.Utilities
                     TForm.rotation = Target.rotation;// should animate this later. Add Transform.AnimateRotate extension.
                 Vector3 targetPosition = _useLocal ? TForm.parent.InverseTransformPoint(Target.position) : Target.position;
                 TForm.AnimateTranslateTo(targetPosition, _animationTime, _useLocal);
+                if(_matchRotation)
+                    TForm.rotation = Target.rotation;// should animate this later. Add Transform.AnimateRotate extension.
             }        
             
             
