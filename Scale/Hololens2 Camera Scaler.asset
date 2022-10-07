@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a184da411ea0447b94376a0e94c216, type: 3}
   m_Name: Hololens2 Camera Scaler
   m_EditorClassIdentifier: 
-  factor: 1.006944
-  isInverse: 1
+  _usageNotes: 
+  factor: 1
