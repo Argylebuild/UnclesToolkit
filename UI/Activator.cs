@@ -79,7 +79,6 @@ namespace Argyle.Utilities.UI
 
 			if (_target.IsPrefab())
 				_target = Instantiate(_target, TForm.position, TForm.rotation, TForm);
-			_target.gameObject.name = "ControlPanelP";
 
 			//Debug.Log($"Activating {_target.name}");
 			_isActive = true;
