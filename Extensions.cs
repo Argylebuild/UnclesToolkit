@@ -205,8 +205,13 @@ namespace Argyle.Utilities
 		#endregion
 
 
+		#region ==== GameObject ====-----------------
 
-		
+		public static bool IsPrefab(this GameObject go) => go.scene.name == null;
+
+		#endregion ------------------/GameObject ====
+
+
 	}
 
 }
