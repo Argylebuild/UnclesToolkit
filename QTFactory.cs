@@ -27,6 +27,7 @@ namespace Argyle.UnclesToolkit
 
 
 		private QtMachine[] _machines;
+		private int _machineQty;
 		
 		public bool IsRunning { get; private set; } = false;
 		public bool IsAsync { get; }
@@ -45,7 +46,8 @@ namespace Argyle.UnclesToolkit
 		{
 			_iterationMethod = iterationMethod;
 			IsAsync = false;
-			SetupMachines(machinesQty);
+			_machineQty = machinesQty;
+			SetupMachines();
 		}
 
 		/// <summary>
@@ -57,13 +59,14 @@ namespace Argyle.UnclesToolkit
 		{
 			_iterationMethodAsync = iterationMethodAsync;
 			IsAsync = true;
-			SetupMachines(machinesQty);
+			_machineQty = machinesQty;
+			SetupMachines();
 		}
 
-		private void SetupMachines(int qty)
+		private void SetupMachines()
 		{
-			_machines = new QtMachine[qty];
-			for (int i = 0; i < qty; i++)
+			_machines = new QtMachine[_machineQty];
+			for (int i = 0; i < _machineQty; i++)
 			{
 				_machines[i] = new QtMachine(this);
 			}
@@ -118,7 +121,22 @@ namespace Argyle.UnclesToolkit
 
 		public void ResetQueue()
 		{
+			StopFactory();
+			SetupMachines();
 			Queue = new Queue<T>();
+			StartFactory();
+		}
+
+		private void DestroyMachines()
+		{
+			if(_machines.Length == _machineQty)
+			{
+				for (int i = 0; i < _machineQty; i++)
+				{
+					_machines[i]?.Kill();
+					_machines[i] = null;
+				}
+			}		
 		}
 
 		public void Report()
@@ -126,9 +144,11 @@ namespace Argyle.UnclesToolkit
 			string methodName = IsAsync ? 
 				_iterationMethodAsync.Method.Name : _iterationMethod.Method.Name;
 			
-			Debug.Log($"QtFactory {methodName}: {Queue.Count}");
+			Debug.Log($"QtFactory {methodName}: {ActiveMachineCount} active machines. \n" +
+			          $"out of {_machines.Length} machines.");
 		}
 
+		public int ActiveMachineCount;
 		public int Count => Queue.Count;
 		
 		#endregion ------------------/IO ====
@@ -147,6 +167,7 @@ namespace Argyle.UnclesToolkit
 		public void StopFactory()
 		{
 			IsRunning = false;
+			DestroyMachines();
 			Queue = new Queue<T>();
 		}
 
@@ -161,6 +182,7 @@ namespace Argyle.UnclesToolkit
 		{
 			private QTFactory<T> _factory;
 
+			
 			public QtMachine(QTFactory<T> factory)
 			{
 				_factory = factory;
@@ -171,9 +193,13 @@ namespace Argyle.UnclesToolkit
 				if(_factory.IsRunning)
 					return;
 				_factory.IsRunning = true;
+				_factory.ActiveMachineCount++;
 
 				while (_factory.IsRunning && Application.isPlaying)
 				{
+					if(_toKill)
+						break;
+
 					_factory.Report();
 					if(_factory.Queue.Count > 0)
 					{
@@ -195,6 +221,16 @@ namespace Argyle.UnclesToolkit
 
 					await UniTask.NextFrame();
 				}
+
+				_factory.ActiveMachineCount--;
+			}
+			
+			
+			private bool _toKill;
+
+			public void Kill()
+			{
+				_toKill = true;
 			}
 		}
 	}
