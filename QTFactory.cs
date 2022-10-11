@@ -68,7 +68,7 @@ namespace Argyle.UnclesToolkit
 			_machines = new QtMachine[_machineQty];
 			for (int i = 0; i < _machineQty; i++)
 			{
-				_machines[i] = new QtMachine(this);
+				_machines[i] = new QtMachine(this, i);
 			}
 
 		}
@@ -119,9 +119,10 @@ namespace Argyle.UnclesToolkit
 			}		
 		}
 
-		public void ResetQueue()
+		public void ResetFactory()
 		{
 			StopFactory();
+			DestroyMachines();
 			SetupMachines();
 			Queue = new Queue<T>();
 			StartFactory();
@@ -139,16 +140,15 @@ namespace Argyle.UnclesToolkit
 			}		
 		}
 
-		public void Report()
+		public void Report(QtMachine machine, T thing)
 		{
 			string methodName = IsAsync ? 
 				_iterationMethodAsync.Method.Name : _iterationMethod.Method.Name;
 			
-			Debug.Log($"QtFactory {methodName}: {ActiveMachineCount} active machines. \n" +
+			Debug.Log($"QtFactory machine {machine.Name}: acting on {thing} \n" +
 			          $"out of {_machines.Length} machines.");
 		}
 
-		public int ActiveMachineCount;
 		public int Count => Queue.Count;
 		
 		#endregion ------------------/IO ====
@@ -158,6 +158,7 @@ namespace Argyle.UnclesToolkit
 
 		public void StartFactory()
 		{
+			IsRunning = true;
 			foreach (var machine in _machines)
 			{
 				machine.MachineLoop();	
@@ -167,7 +168,6 @@ namespace Argyle.UnclesToolkit
 		public void StopFactory()
 		{
 			IsRunning = false;
-			DestroyMachines();
 			Queue = new Queue<T>();
 		}
 
@@ -182,29 +182,40 @@ namespace Argyle.UnclesToolkit
 		{
 			private QTFactory<T> _factory;
 
+			public string Name { get; }
+			private int index;
 			
-			public QtMachine(QTFactory<T> factory)
+			
+			public QtMachine(QTFactory<T> factory, int index)
 			{
+				Name = factory.IsAsync ? 
+					factory._iterationMethodAsync.Method.Name : factory._iterationMethod.Method.Name;
+				Name += $" - {index}";
+
+				this.index = index;
+				
 				_factory = factory;
 			}
 
 			public async void MachineLoop()
 			{
-				if(_factory.IsRunning)
-					return;
-				_factory.IsRunning = true;
-				_factory.ActiveMachineCount++;
-
 				while (_factory.IsRunning && Application.isPlaying)
 				{
+					//_factory.Report(this, null);
 					if(_toKill)
-						break;
-
-					_factory.Report();
+					{
+						Debug.Log("Killing the machine loop! ");
+						_toKill = false;
+						continue;
+					}
 					if(_factory.Queue.Count > 0)
 					{
 						if (_factory.IsAsync)
-						{ await _factory._iterationMethodAsync(_factory.Queue.Dequeue()); }
+						{
+							var thing = _factory.Queue.Dequeue();
+							await _factory._iterationMethodAsync(thing);
+							_factory.Report(this, thing);
+						}
 						else
 						{
 							Stopwatch frameWatch = new Stopwatch();
@@ -221,8 +232,6 @@ namespace Argyle.UnclesToolkit
 
 					await UniTask.NextFrame();
 				}
-
-				_factory.ActiveMachineCount--;
 			}
 			
 			
