@@ -25,7 +25,7 @@ namespace Argyle.UnclesToolkit
 		private IterationMethodAsync _iterationMethodAsync;
 
 
-		private QtMachine _machine;
+		private QtMachine[] _machines;
 		
 		public bool IsRunning { get; private set; } = false;
 		public bool IsAsync { get; }
@@ -44,22 +44,30 @@ namespace Argyle.UnclesToolkit
 		{
 			_iterationMethod = iterationMethod;
 			IsAsync = false;
-			_machine = new QtMachine(this);
+			SetupMachines(1);
 		}
 
 		/// <summary>
 		/// Constructor for multithreaded async operations (E.G. i/o, network, heavy calculations)
 		/// </summary>
-		/// <param name="queue">QT queue of objects to iterate over according to...</param>
 		/// <param name="iterationMethodAsync">The stuff you do to it. </param>
-
-		public QTFactory(IterationMethodAsync iterationMethodAsync)
+		/// <param name="machinesQty">How many parallel machines will run this async method?</param>
+		public QTFactory(IterationMethodAsync iterationMethodAsync, int machinesQty)
 		{
 			_iterationMethodAsync = iterationMethodAsync;
 			IsAsync = true;
-			_machine = new QtMachine(this);
+			SetupMachines(machinesQty);
 		}
 
+		private void SetupMachines(int qty)
+		{
+			_machines = new QtMachine[qty];
+			for (int i = 0; i < qty; i++)
+			{
+				_machines[i] = new QtMachine(this);
+			}
+
+		}
 
 		#endregion ------------------/CTOR ====
 
@@ -84,7 +92,10 @@ namespace Argyle.UnclesToolkit
 
 		public void StartFactory()
 		{
-			_machine.MachineLoop();
+			foreach (var machine in _machines)
+			{
+				machine.MachineLoop();	
+			}
 		}
 
 		public void StopFactory()
