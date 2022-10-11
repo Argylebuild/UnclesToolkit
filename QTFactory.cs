@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Argyle.glTF;
 using Argyle.Utilities;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Argyle.UnclesToolkit
 {
@@ -40,11 +41,11 @@ namespace Argyle.UnclesToolkit
 		/// Constructor for main thread operations (E.G. monobehavior operations)
 		/// </summary>
 		/// <param name="iterationMethod">The stuff you do to it. </param>
-		public QTFactory(IterationMethod iterationMethod)
+		public QTFactory(IterationMethod iterationMethod, int machinesQty)
 		{
 			_iterationMethod = iterationMethod;
 			IsAsync = false;
-			SetupMachines(1);
+			SetupMachines(machinesQty);
 		}
 
 		/// <summary>
@@ -84,7 +85,52 @@ namespace Argyle.UnclesToolkit
 				Queue.Enqueue(thing);
 		}
 
+		/// <summary>
+		/// Add an entire collection. Sorted by floats. 
+		/// </summary>
+		/// <param name="things"></param>
+		public void AddSorted(ICollection<T> things)
+		{
+			Queue = new Queue<T>();
+			foreach (var thing in things)
+			{
+				Queue.Enqueue(thing);
+			}
+		}
 
+		/// <summary>
+		/// If elements no longer belong in queue, shortcut to remove all.
+		/// O(nq * nb) at least so use sparingly.
+		/// </summary>
+		/// <param name="banned"></param>
+		public void RemoveList(SafeHashset<T> banned)
+		{
+			if(Queue.Count > 0 && banned.Count > 0)
+			{
+				Queue<T> culled = new Queue<T>();
+				var thing = Queue.Dequeue();
+				if (!banned.Contains(thing))
+					culled.Enqueue(thing);
+
+				Queue = culled;
+			}		
+		}
+
+		public void ResetQueue()
+		{
+			Queue = new Queue<T>();
+		}
+
+		public void Report()
+		{
+			string methodName = IsAsync ? 
+				_iterationMethodAsync.Method.Name : _iterationMethod.Method.Name;
+			
+			Debug.Log($"QtFactory {methodName}: {Queue.Count}");
+		}
+
+		public int Count => Queue.Count;
+		
 		#endregion ------------------/IO ====
 		
 
@@ -126,8 +172,9 @@ namespace Argyle.UnclesToolkit
 					return;
 				_factory.IsRunning = true;
 
-				while (_factory.IsRunning)
+				while (_factory.IsRunning && Application.isPlaying)
 				{
+					_factory.Report();
 					if(_factory.Queue.Count > 0)
 					{
 						if (_factory.IsAsync)
