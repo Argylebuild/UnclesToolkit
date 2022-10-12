@@ -12,22 +12,22 @@ namespace Argyle.UnclesToolkit
 	/// NOTE: If you're reading this, THIS MEANS YOU!
 	/// Create one or more channels to handle all members of a queue in non-blocking parallel. 
 	/// </summary>
-	public class QTFactory<T> where T : class
+	public class QtFactory<T> where T : class
 	{
 
 		#region ==== Properties ====-----------------
-		private Queue<T> Queue = new Queue<T>();
+		private Queue<T> _queue = new Queue<T>();
 
 		
 		public delegate void IterationMethod(T thing);
 		public delegate UniTask IterationMethodAsync(T thing);
 
-		private IterationMethod _iterationMethod;
-		private IterationMethodAsync _iterationMethodAsync;
+		private readonly IterationMethod _iterationMethod;
+		private readonly IterationMethodAsync _iterationMethodAsync;
 
 
 		private QtMachine[] _machines;
-		private int _machineQty;
+		private readonly int _machineQty;
 		
 		public bool IsRunning { get; private set; } = false;
 		public bool IsAsync { get; }
@@ -42,7 +42,7 @@ namespace Argyle.UnclesToolkit
 		/// Constructor for main thread operations (E.G. monobehavior operations)
 		/// </summary>
 		/// <param name="iterationMethod">The stuff you do to it. </param>
-		public QTFactory(IterationMethod iterationMethod, int machinesQty)
+		public QtFactory(IterationMethod iterationMethod, int machinesQty)
 		{
 			_iterationMethod = iterationMethod;
 			IsAsync = false;
@@ -55,7 +55,7 @@ namespace Argyle.UnclesToolkit
 		/// </summary>
 		/// <param name="iterationMethodAsync">The stuff you do to it. </param>
 		/// <param name="machinesQty">How many parallel machines will run this async method?</param>
-		public QTFactory(IterationMethodAsync iterationMethodAsync, int machinesQty)
+		public QtFactory(IterationMethodAsync iterationMethodAsync, int machinesQty)
 		{
 			_iterationMethodAsync = iterationMethodAsync;
 			IsAsync = true;
@@ -63,6 +63,7 @@ namespace Argyle.UnclesToolkit
 			SetupMachines();
 		}
 
+		
 		private void SetupMachines()
 		{
 			_machines = new QtMachine[_machineQty];
@@ -76,7 +77,7 @@ namespace Argyle.UnclesToolkit
 		#endregion ------------------/CTOR ====
 
 
-		#region ==== IO ====-----------------
+		#region ==== Management ====-----------------
 
 		/// <summary>
 		/// Adds to the queue only if the thing isn't already in it. 
@@ -84,8 +85,8 @@ namespace Argyle.UnclesToolkit
 		/// <param name="thing"></param>
 		public void AddSafe(T thing)
 		{
-			if(!Queue.Contains(thing))
-				Queue.Enqueue(thing);
+			if(!_queue.Contains(thing))
+				_queue.Enqueue(thing);
 		}
 
 		/// <summary>
@@ -94,28 +95,28 @@ namespace Argyle.UnclesToolkit
 		/// <param name="things"></param>
 		public void AddSorted(ICollection<T> things)
 		{
-			Queue = new Queue<T>();
+			_queue = new Queue<T>();
 			foreach (var thing in things)
 			{
-				Queue.Enqueue(thing);
+				_queue.Enqueue(thing);
 			}
 		}
 
 		/// <summary>
 		/// If elements no longer belong in queue, shortcut to remove all.
-		/// O(nq * nb) at least so use sparingly.
+		/// WARNING: O(nq * nb) at least so use sparingly.
 		/// </summary>
 		/// <param name="banned"></param>
 		public void RemoveList(SafeHashset<T> banned)
 		{
-			if(Queue.Count > 0 && banned.Count > 0)
+			if(_queue.Count > 0 && banned.Count > 0)
 			{
 				Queue<T> culled = new Queue<T>();
-				var thing = Queue.Dequeue();
+				var thing = _queue.Dequeue();
 				if (!banned.Contains(thing))
 					culled.Enqueue(thing);
 
-				Queue = culled;
+				_queue = culled;
 			}		
 		}
 
@@ -124,10 +125,14 @@ namespace Argyle.UnclesToolkit
 			StopFactory();
 			DestroyMachines();
 			SetupMachines();
-			Queue = new Queue<T>();
+			_queue = new Queue<T>();
 			StartFactory();
 		}
 
+		/// <summary>
+		/// Stop and remove referene to factory machines.
+		/// Releases for garbage collector. 
+		/// </summary>
 		private void DestroyMachines()
 		{
 			if(_machines.Length == _machineQty)
@@ -140,18 +145,8 @@ namespace Argyle.UnclesToolkit
 			}		
 		}
 
-		public void Report(QtMachine machine, T thing)
-		{
-			string methodName = IsAsync ? 
-				_iterationMethodAsync.Method.Name : _iterationMethod.Method.Name;
-			
-			Debug.Log($"QtFactory machine {machine.Name}: acting on {thing} \n" +
-			          $"out of {_machines.Length} machines.");
-		}
-
-		public int Count => Queue.Count;
 		
-		#endregion ------------------/IO ====
+		#endregion ------------------/Management ====
 		
 
 		#region ==== Execution ====-----------------
@@ -168,31 +163,32 @@ namespace Argyle.UnclesToolkit
 		public void StopFactory()
 		{
 			IsRunning = false;
-			Queue = new Queue<T>();
+			_queue = new Queue<T>();
 		}
 
 		#endregion ------------------/Execution ====
 
-		
-		
-		
-		
-		
-		public class QtMachine
+
+
+
+
+		#region ==== Support ====-----------------
+
+		private class QtMachine
 		{
-			private QTFactory<T> _factory;
+			private QtFactory<T> _factory;
 
 			public string Name { get; }
-			private int index;
+			private int _index;
 			
 			
-			public QtMachine(QTFactory<T> factory, int index)
+			public QtMachine(QtFactory<T> factory, int index)
 			{
 				Name = factory.IsAsync ? 
 					factory._iterationMethodAsync.Method.Name : factory._iterationMethod.Method.Name;
 				Name += $" - {index}";
 
-				this.index = index;
+				this._index = index;
 				
 				_factory = factory;
 			}
@@ -201,26 +197,24 @@ namespace Argyle.UnclesToolkit
 			{
 				while (_factory.IsRunning && Application.isPlaying)
 				{
-					//_factory.Report(this, null);
 					if(_toKill)
 					{
 						Debug.Log("Killing the machine loop! ");
 						_toKill = false;
 						continue;
 					}
-					if(_factory.Queue.Count > 0)
+					if(_factory._queue.Count > 0)
 					{
 						if (_factory.IsAsync)
 						{
-							var thing = _factory.Queue.Dequeue();
+							var thing = _factory._queue.Dequeue();
 							await _factory._iterationMethodAsync(thing);
-							_factory.Report(this, thing);
 						}
 						else
 						{
 							Stopwatch frameWatch = new Stopwatch();
 
-							_factory._iterationMethod(_factory.Queue.Dequeue());
+							_factory._iterationMethod(_factory._queue.Dequeue());
 
 							if (frameWatch.LapSoFar() > 1 / Timing.Instance.MinFramerate)
 							{
@@ -242,5 +236,7 @@ namespace Argyle.UnclesToolkit
 				_toKill = true;
 			}
 		}
+
+		#endregion ------------------/Support ====
 	}
 }
