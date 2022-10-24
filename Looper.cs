@@ -101,12 +101,14 @@ namespace Argyle.Utilities
 		
 		public Looper Add(IterationMethod method)
 		{
-			_iterations.Add(method);
+			if(!_iterations.Contains(method))
+				_iterations.Add(method);
 			return this;
 		}
 		public Looper Add(IterationMethodAsync method) 
 		{
-			_iterationsAsync.Add(method);
+			if(!_iterationsAsync.Contains(method))
+				_iterationsAsync.Add(method);
 			return this;
 		} 
 		public Looper Remove(IterationMethod method)
