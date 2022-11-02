@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using API.Utility;
 using Unity.Mathematics;
 using UnityEngine;
@@ -201,6 +203,52 @@ namespace Argyle.Utilities
 		public static bool Within(this float candidate, float target, float percent = 1) =>
 			math.abs(candidate - target) < percent / 100 * percent;
 
+
+
+		public static float Sigmoid(this float input)
+		{
+			return 1 / (1 + Mathf.Exp(-input));
+		}
+
+		/// <summary>
+		/// Takes a number within a range and returns its position along an s curve from 0 to 1.
+		/// The curve is scaled to match the dataset. 
+		/// </summary>
+		/// <param name="input">The member being analyzed.</param>
+		/// <param name="min">The lowest member of the data set to establish range.</param>
+		/// <param name="max">The lowest member of the data set to establish range.</param>
+		/// <returns></returns>
+		public static float Squash(this float input, float min, float max)
+		{	//           center on zero...           scale to standard curve range
+			float regularized = (input - (min + max) / 2) * 12 / (max - min);
+
+			//apply sigmoid
+			return regularized.Sigmoid();
+		}
+		
+		
+		/// <summary>
+		/// Takes a collection of numbers and positions along an s curve from 0 to 1.
+		/// The curve is scaled to match the range of the dataset. 
+		/// </summary>
+		/// <param name="input">The member being analyzed.</param>
+		/// <param name="min">The lowest member of the data set to establish range.</param>
+		/// <param name="max">The lowest member of the data set to establish range.</param>
+		/// <returns></returns>
+		public static List<float> Squash(this ICollection<float> inputs)
+		{
+			List<float> outputs = new List<float>();
+			float min = inputs.Min();
+			float max = inputs.Max();
+			
+			foreach (var input in inputs)
+			{
+				outputs.Add(input.Squash(min, max));
+			}
+
+			return outputs;
+		}
+		
 		
 		#endregion
 

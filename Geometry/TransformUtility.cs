@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Unity.IO.Compression;
 using UnityEngine;
 
 namespace Argyle.Utilities.Geometry
@@ -126,5 +127,19 @@ namespace Argyle.Utilities.Geometry
 
         }
 
+        /// <summary>
+        /// Creates a snapshot of the source coordinate system for making transformations. 
+        /// </summary>
+        /// <returns></returns>
+        public static Transform Copy(Transform source)
+        {
+            Transform copy = new GameObject().transform;
+            copy.parent = source.parent;
+            copy.position = source.position;
+            copy.rotation = source.rotation;
+            copy.localScale = source.localScale;
+
+            return copy;
+        }
     }
 }
