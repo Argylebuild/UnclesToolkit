@@ -1,56 +1,57 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMatch : MonoBehaviour
+namespace Argyle.UnclesToolkit
 {
-    public Camera Source
+    public class CameraMatch : MonoBehaviour
     {
-        get
+        public Camera Source
         {
-            if(_source == null)
-                _source = Camera.main;
+            get
+            {
+                if(_source == null)
+                    _source = Camera.main;
 
-            return _source;
+                return _source;
+            }
         }
-    }
-    [SerializeField] private Camera _source;
+        [SerializeField] private Camera _source;
     
-    private Camera _self;
+        private Camera _self;
 
-    public bool continuous; 
-    public Camera Self
-    {
-        get
+        public bool continuous; 
+        public Camera Self
         {
-            if (_self == null)
-                _self = GetComponent<Camera>();
+            get
+            {
+                if (_self == null)
+                    _self = GetComponent<Camera>();
 
-            return _self;
+                return _self;
+            }
         }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
+        // Start is called before the first frame update
+        void Start()
+        {
         
-    }
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(continuous)
-            MatchSource();
-    }
+        // Update is called once per frame
+        void Update()
+        {
+            if(continuous)
+                MatchSource();
+        }
 
-    public void MatchSource()
-    {
-        Self.aspect = Source.aspect;
-        Self.depth = Source.depth;
-        Self.orthographic = Source.orthographic;
-        Self.rect = Source.rect;
-        Self.focalLength = Source.focalLength;
-        Self.gateFit = Source.gateFit;
-        Self.fieldOfView = Source.fieldOfView;
-    }
+        public void MatchSource()
+        {
+            Self.aspect = Source.aspect;
+            Self.depth = Source.depth;
+            Self.orthographic = Source.orthographic;
+            Self.rect = Source.rect;
+            Self.focalLength = Source.focalLength;
+            Self.gateFit = Source.gateFit;
+            Self.fieldOfView = Source.fieldOfView;
+        }
     
+    }
 }

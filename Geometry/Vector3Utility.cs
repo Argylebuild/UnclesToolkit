@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Argyle.Utilities;
 using UnityEngine;
 
-namespace Argyle.Utilities.Geometry
+namespace Argyle.UnclesToolkit.Geometry
 {
 	public static class Vector3Utility
 	{

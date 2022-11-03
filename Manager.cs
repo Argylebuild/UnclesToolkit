@@ -1,9 +1,8 @@
-using System.Reflection;
+using Argyle.Utilities;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
     /// <summary>
     /// Manager is used as a base class for classes that would want to be static

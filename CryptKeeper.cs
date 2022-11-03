@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
     /// <summary>
     /// This is an incomplete code. Not sure best way to store the key or encrypt the data.

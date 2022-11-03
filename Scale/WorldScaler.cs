@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Argyle.Utilities;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit.Scale
 {
     /// <summary>
     /// Utility to scale the hologram to match the world. Intended to accomodate hardware imperfections.

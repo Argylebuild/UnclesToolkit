@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using API;
 using Argyle.APIClient;
 using Argyle.UI.Dialogue;
 using Cysharp.Threading.Tasks;
@@ -10,8 +8,7 @@ using Newtonsoft.Json;
 using Unity.Collections;
 using UnityEngine;
 
-
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	/// <summary>
 	/// At this point it stores in each platform but doesn't really encrypt or secure the data.

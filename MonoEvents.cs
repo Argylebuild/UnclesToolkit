@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine.Events;
+﻿using UnityEngine.Events;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	public class MonoEvents : ArgyleComponent
 	{

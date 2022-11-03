@@ -1,4 +1,4 @@
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
     public interface IState
     {

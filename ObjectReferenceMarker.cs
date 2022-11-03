@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	/// <summary>
 	/// Used in combination with ObjectReference for loosely coupled, prefab-safe object references in a scene.

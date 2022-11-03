@@ -1,8 +1,8 @@
-using Argyle.Utilities.Geometry;
+using Argyle.UnclesToolkit.Geometry;
 using EasyButtons;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
     /// <summary>
     /// yeah, I know. It's a silly name. For the dumb joke's sake, forgive me. 

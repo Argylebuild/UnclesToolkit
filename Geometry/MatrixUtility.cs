@@ -5,7 +5,7 @@ using UnityEngine;
  * By numberkruncher oct 31, 2014. Happy halloweeeeeen!
  */
 
-namespace Argyle.Utilities.Geometry
+namespace Argyle.UnclesToolkit.Geometry
 {
     public static class MatrixUtility 
     {

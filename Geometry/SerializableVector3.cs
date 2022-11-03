@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Argyle.Utilities.Geometry
+namespace Argyle.UnclesToolkit.Geometry
 {
     /// <summary>
     /// Since unity doesn't flag the Vector3 as serializable, we

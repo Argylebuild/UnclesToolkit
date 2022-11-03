@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
-using System.Collections;
-using Cysharp.Threading.Tasks;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	public class Timing : Manager<Timing>
 	{

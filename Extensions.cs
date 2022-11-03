@@ -5,7 +5,7 @@ using API.Utility;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	public static class Extensions
 	{

@@ -1,8 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
-using Unity.IO.Compression;
 using UnityEngine;
 
-namespace Argyle.Utilities.Geometry
+namespace Argyle.UnclesToolkit.Geometry
 {
     public static class TransformUtility 
     {

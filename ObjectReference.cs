@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Argyle.Utilities;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	/// Used in combination with ObjectReferenceMarker for loosely coupled, prefab-safe object references in a scene.
 	/// Place an ObjectReference on the object you are looking to reference.

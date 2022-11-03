@@ -1,7 +1,7 @@
 using EasyButtons;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	public class Ping : ArgyleComponent
 	{

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	[Serializable]
 	class LogEntry

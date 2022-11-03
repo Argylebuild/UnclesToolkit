@@ -1,8 +1,7 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Argyle.Utilities;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	public class PointAtCamera : ArgyleComponent
 	{
