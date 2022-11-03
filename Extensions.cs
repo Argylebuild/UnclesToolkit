@@ -217,25 +217,29 @@ namespace Argyle.Utilities
 		/// <param name="input">The member being analyzed.</param>
 		/// <param name="min">The lowest member of the data set to establish range.</param>
 		/// <param name="max">The lowest member of the data set to establish range.</param>
+		/// <param name="curve">Multiplier controlling the sharpness of the curve. 1 is standard.</param>
+		/// <param name="offset">Horizontal offset of the central curve. Positive numbers move the curve to the right,
+		/// reducing each output. </param>
 		/// <returns></returns>
-		public static float Squash(this float input, float min, float max)
-		{	//           center on zero...           scale to standard curve range
-			float regularized = (input - (min + max) / 2) * 12 / (max - min);
+		public static float Squash(this float input, float min, float max, float curve = 1, float offset = 0)
+		{	//           center on zero...           scale to standard curve... sharpen by curve
+			float regularized = (input + offset - (min + max) / 2) * 12 / (max - min) * curve;
 
 			//apply sigmoid
 			return regularized.Sigmoid();
 		}
-		
-		
+
+
 		/// <summary>
 		/// Takes a collection of numbers and positions along an s curve from 0 to 1.
 		/// The curve is scaled to match the range of the dataset. 
 		/// </summary>
-		/// <param name="input">The member being analyzed.</param>
-		/// <param name="min">The lowest member of the data set to establish range.</param>
-		/// <param name="max">The lowest member of the data set to establish range.</param>
+		/// <param name="inputs">The members being analyzed.</param>
+		/// <param name="curve">Multiplier controlling the sharpness of the curve. 1 is standard.</param>
+		/// <param name="offset">Horizontal offset of the central curve. Positive numbers move the curve to the right,
+		/// reducing each output. </param>
 		/// <returns></returns>
-		public static List<float> Squash(this ICollection<float> inputs)
+		public static List<float> Squash(this ICollection<float> inputs, float curve = 1, float offset = 0)
 		{
 			List<float> outputs = new List<float>();
 			float min = inputs.Min();
@@ -243,7 +247,7 @@ namespace Argyle.Utilities
 			
 			foreach (var input in inputs)
 			{
-				outputs.Add(input.Squash(min, max));
+				outputs.Add(input.Squash(min, max, curve, offset));
 			}
 
 			return outputs;
