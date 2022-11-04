@@ -250,8 +250,21 @@ namespace Argyle.UnclesToolkit.Geometry
 		
 
 		#endregion /Should probably be extensions
-		
-		
+
+
+		#region ==== New vector3 ====-----------------
+
+		/// <summary>
+		/// Creates a randomized vector3 where each component is randomized then the whole is normalized.
+		/// </summary>
+		/// <returns></returns>
+		public static Vector3 Random() =>
+			Vector3.Normalize(new Vector3(
+				new System.Random().Next(),
+				new System.Random().Next(),
+				new System.Random().Next()));
+
+		#endregion ------------------/New vector3 ====
 		
 		
 	}
