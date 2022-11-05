@@ -1,182 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.MixedReality.Toolkit.UI;
 
 namespace Argyle.UnclesToolkit
 {
 	public static class CollectionStats
 	{
+		private const int minQty = 5;
+		private const string outOfRangeMessage = "The collection must have at least objects to be properly analyzed.";
+		private const string noDataMessage = "Collection must contain data to be analyzed.";
+		
 		/// <summary>
 		/// Lowest datum in the dataset according to the sorted float keys. 
 		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="thing">The object associated with the given key</param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
+		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
 		/// <exception cref="IndexOutOfRangeException"></exception>
-		public static float Min<T>(this SortedList<float, T> data, out T thing)
+		public static KeyValuePair<float, T> Min<T>(this SortedList<float, T> data)
 		{
 			if (data.Count > 0)
 			{
 				float key = data.Keys[0];
-				thing = data[key];
-				return key;
+				return new KeyValuePair<float, T>(key, data[key]);
 			}	
 			else
-				throw new IndexOutOfRangeException();
-		}
-		/// <summary>
-		/// Lowest datum in the dataset according to the sorted float keys. 
-		/// </summary>
-		/// <param name="data">Prebuilt sorted list with the sorting parameter as floats. </param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public static float Min<T>(this SortedList<float, T> data)
-		{
-			T temp;
-			return data.Min<T>(out temp);
+				throw new IndexOutOfRangeException(noDataMessage);
 		}
 
 		/// <summary>
 		/// Datapoint dividing the 1st quartile from the 2nd in the dataset according to the sorted float keys. 
 		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="thing">The object associated with the given key</param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
+		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
 		/// <exception cref="IndexOutOfRangeException"></exception>
-		public static float Q1<T>(this SortedList<float, T> data, out T thing)
+		public static KeyValuePair<float, T> Q1<T>(this SortedList<float, T> data)
 		{
 			if (data.Count > 5)
 			{
 				float key = data.Keys[(data.Count - 1) / 4];
-				thing = data[key];
-				return key;
+				return new KeyValuePair<float, T>(key, data[key]);
 			}	
-			else if (data.Count > 0)
-			{
-				float key = data.Keys[0];
-				thing = data[key];
-				return key;
-			}
 			else
-				throw new IndexOutOfRangeException();
+				throw new IndexOutOfRangeException(outOfRangeMessage);
 		}
 		
 		/// <summary>
-		/// Datapoint dividing the 1st quartile from the 2nd in the dataset according to the sorted float keys. 
-		/// </summary>
-		/// <param name="data">Prebuilt sorted list with the sorting parameter as floats. </param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public static float Q1<T>(this SortedList<float, T> data)
-		{
-			T temp;
-			return data.Q1<T>(out temp);
-		}
-
-		/// <summary>
 		/// Middle datum in the dataset according to the sorted float keys. 
 		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="thing">The object associated with the given key</param>
-		/// <typeparam name="T"></typeparam>
+		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
 		/// <returns></returns>
-		/// <exception cref="IndexOutOfRangeException"></exception>
-		public static float Med<T>(this SortedList<float, T> data, out T thing)
+		public static KeyValuePair<float, T> Med<T>(this SortedList<float, T> data)
 		{
+			float key;
 			if (data.Count > 3)
-			{
-				float key = data.Keys[(data.Count - 1) / 2];
-				thing = data[key];
-				return key;
-			}	
+				key = data.Keys[(data.Count - 1) / 2];
 			else if (data.Count > 0)
-			{
-				float key = data.Keys[0];
-				thing = data[key];
-				return key;
-			}
+				key = data.Keys[0];
 			else
 				throw new IndexOutOfRangeException();
-		}
-		/// <summary>
-		/// Middle datum in the dataset according to the sorted float keys. 
-		/// </summary>
-		/// <param name="data">Prebuilt sorted list with the sorting parameter as floats. </param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public static float Med<T>(this SortedList<float, T> data)
-		{
-			T temp;
-			return data.Med<T>(out temp);
+			
+			return new KeyValuePair<float, T>(key, data[key]);
+
 		}
 
 		/// <summary>
 		/// Datapoint dividing the 3rd quartile from the 4th in the dataset according to the sorted float keys. 
 		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="thing">The object associated with the given key</param>
-		/// <typeparam name="T"></typeparam>
+		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
 		/// <returns></returns>
-		/// <exception cref="IndexOutOfRangeException"></exception>
-		public static float Q3<T>(this SortedList<float, T> data, out T thing)
+		public static KeyValuePair<float, T> Q3<T>(this SortedList<float, T> data)
 		{
+			float key;
 			if (data.Count > 5)
-			{
-				float key = data.Keys[(data.Count - 1) * 3 / 4];
-				thing = data[key];
-				return key;
-			}	
-			else if (data.Count > 0)
-			{
-				float key = data.Keys[0];
-				thing = data[key];
-				return key;
-			}
+				key = data.Keys[(data.Count - 1) * 3 / 4];
 			else
-				throw new IndexOutOfRangeException();
-		}
-		/// <summary>
-		/// Datapoint dividing the 3rd quartile from the 4th in the dataset according to the sorted float keys. 
-		/// </summary>
-		/// <param name="data">Prebuilt sorted list with the sorting parameter as floats. </param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public static float Q3<T>(this SortedList<float, T> data)
-		{
-			T temp;
-			return data.Q3<T>(out temp);
+				throw new IndexOutOfRangeException(outOfRangeMessage);
+			return new KeyValuePair<float, T>(key, data[key]);
 		}
 
 		/// <summary>
 		/// Highest datum in the dataset according to the sorted float keys. 
 		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="thing">The object associated with the given key</param>
-		/// <typeparam name="T"></typeparam>
+		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
 		/// <returns></returns>
-		/// <exception cref="IndexOutOfRangeException"></exception>
-		public static float Max<T>(this SortedList<float, T> data, out T thing)
+		public static KeyValuePair<float, T> Max<T>(this SortedList<float, T> data)
 		{
 			if (data.Count > 0)
 			{
 				float key = data.Keys[data.Count - 1];
-				thing = data[key];
-				return key;
+				return new KeyValuePair<float, T>(key, data[key]);
 			}	
 			else
-				throw new IndexOutOfRangeException();
-		}
-		/// <summary>
-		/// Highest datum in the dataset according to the sorted float keys. 
-		/// </summary>
-		/// <param name="data">Prebuilt sorted list with the sorting parameter as floats. </param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public static float Max<T>(this SortedList<float, T> data)
-		{
-			T temp;
-			return data.Max<T>(out temp);
+				throw new IndexOutOfRangeException(noDataMessage);
 		}
 
 
@@ -184,17 +97,15 @@ namespace Argyle.UnclesToolkit
 		/// Inner Quartile Range. The difference between the float keys of the 1st and 3rd quartiles.
 		/// Used to calculate outliers etc. 
 		/// </summary>
-		/// <param name="data"></param>
+		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
 		/// <param name="things">The objects associated with the given keys</param>
-		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		/// <exception cref="IndexOutOfRangeException"></exception>
 		public static float Iqr<T>(this SortedList<float, T> data, out List<T> things)
 		{
 			if (data.Count > 5)
 			{
-				float q1 = data.Q1();
-				float q3 = data.Q3();
+				float q1 = data.Q1().Key;
+				float q3 = data.Q3().Key;
 				float iqr = q3 - q1;
 
 				things = new List<T>();
@@ -207,66 +118,46 @@ namespace Argyle.UnclesToolkit
 				return iqr;
 			}
 			else
-				throw new IndexOutOfRangeException();
+				throw new IndexOutOfRangeException(outOfRangeMessage);
 
 		}
 		/// <summary>
 		/// Inner Quartile Range. The difference between the float keys of the 1st and 3rd quartiles.
 		/// Used to calculate outliers etc. 
 		/// </summary>
-		/// <param name="data">Prebuilt sorted list with the sorting parameter as floats. </param>
-		/// <typeparam name="T"></typeparam>
+		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
 		/// <returns></returns>
 		public static float Iqr<T>(this SortedList<float, T> data)
 		{
 			if (data.Count > 5)
-				return data.Q3() - data.Q1();
+				return data.Q3().Key - data.Q1().Key;
 			else
-				throw new IndexOutOfRangeException();
+				throw new IndexOutOfRangeException(outOfRangeMessage);
 
 		}
 
 		/// <summary>
 		/// Calculates and returns a list of outliers from a give dataset, as organized by the sorted set keys. 
 		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="outlierThings">The objects associated with the given outlier key</param>
-		/// <param name="threshold"></param>
-		/// <typeparam name="T"></typeparam>
+		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
+		/// <param name="threshold">A multiplier for the average range, beyond which a datum counts as an outlier. </param>
 		/// <returns></returns>
-		/// <exception cref="IndexOutOfRangeException"></exception>
-		public static List<float> Outliers<T>(this SortedList<float, T> data, out List<T> outlierThings, float threshold = 1.5f)
+		public static SortedList<float, T> Outliers<T>(this SortedList<float, T> data, float threshold = 1.5f)
 		{
 			if (data.Count > 5)
 			{
-				float iqr = data.Q3() - data.Q1();
-				float med = data.Med();
+				float iqr = data.Q3().Key - data.Q1().Key;
+				float med = data.Med().Key;
 
-
-				List<float> outlierKeys = new List<float>();
-				outlierThings = new List<T>();
+				SortedList<float, T> outliers = new SortedList<float, T>();
 				foreach (var datum in data)
-				{
-					if (datum.Key > med + iqr * threshold)
-					{
-						outlierKeys.Add(datum.Key);
-						outlierThings.Add(datum.Value);
-					}
-				}
-
-				return outlierKeys;
+					if (datum.Key > med + iqr * threshold || datum.Key < med - iqr * threshold)
+						outliers.Add(datum.Key, datum.Value);
+				
+				return outliers;
 			}
 			else
-				throw new IndexOutOfRangeException();
+				throw new IndexOutOfRangeException(outOfRangeMessage);
 		}
-
-		public static List<float> Outliers<T>(this SortedList<float, T> data, float threshold = 1.5f)
-		{
-			List<T> temp = new List<T>();
-			return data.Outliers<T>(out temp);
-
-		}
-
-		
 	}
 }
