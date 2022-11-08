@@ -33,7 +33,7 @@ namespace Argyle.UnclesToolkit
 		/// <exception cref="IndexOutOfRangeException"></exception>
 		public static KeyValuePair<float, T> Q1<T>(this SortedList<float, T> data)
 		{
-			if (data.Count > 5)
+			if (data.Count >= minQty)
 			{
 				float key = data.Keys[(data.Count - 1) / 4];
 				return new KeyValuePair<float, T>(key, data[key]);
@@ -50,7 +50,7 @@ namespace Argyle.UnclesToolkit
 		public static KeyValuePair<float, T> Med<T>(this SortedList<float, T> data)
 		{
 			float key;
-			if (data.Count > 3)
+			if (data.Count >= (minQty + 1) / 2)
 				key = data.Keys[(data.Count - 1) / 2];
 			else if (data.Count > 0)
 				key = data.Keys[0];
@@ -69,7 +69,7 @@ namespace Argyle.UnclesToolkit
 		public static KeyValuePair<float, T> Q3<T>(this SortedList<float, T> data)
 		{
 			float key;
-			if (data.Count > 5)
+			if (data.Count >= minQty)
 				key = data.Keys[(data.Count - 1) * 3 / 4];
 			else
 				throw new IndexOutOfRangeException(outOfRangeMessage);
@@ -102,7 +102,7 @@ namespace Argyle.UnclesToolkit
 		/// <returns></returns>
 		public static float Iqr<T>(this SortedList<float, T> data, out List<T> things)
 		{
-			if (data.Count > 5)
+			if (data.Count >= minQty)
 			{
 				float q1 = data.Q1().Key;
 				float q3 = data.Q3().Key;
@@ -129,7 +129,7 @@ namespace Argyle.UnclesToolkit
 		/// <returns></returns>
 		public static float Iqr<T>(this SortedList<float, T> data)
 		{
-			if (data.Count > 5)
+			if (data.Count >= minQty)
 				return data.Q3().Key - data.Q1().Key;
 			else
 				throw new IndexOutOfRangeException(outOfRangeMessage);
@@ -140,18 +140,18 @@ namespace Argyle.UnclesToolkit
 		/// Calculates and returns a list of outliers from a give dataset, as organized by the sorted set keys. 
 		/// </summary>
 		/// <param name="data">A collection of objects, sorted by some measurement. To be analyzed according to that measurement. </param>
-		/// <param name="threshold">A multiplier for the average range, beyond which a datum counts as an outlier. </param>
+		/// <param name="multiplier">A multiplier for the average range, beyond which a datum counts as an outlier. </param>
 		/// <returns></returns>
-		public static SortedList<float, T> Outliers<T>(this SortedList<float, T> data, float threshold = 1.5f)
+		public static SortedList<float, T> Outliers<T>(this SortedList<float, T> data, float multiplier = 1.5f)
 		{
-			if (data.Count > 5)
+			if (data.Count >= minQty)
 			{
 				float iqr = data.Q3().Key - data.Q1().Key;
 				float med = data.Med().Key;
 
 				SortedList<float, T> outliers = new SortedList<float, T>();
 				foreach (var datum in data)
-					if (datum.Key > med + iqr * threshold || datum.Key < med - iqr * threshold)
+					if (datum.Key > med + iqr * multiplier || datum.Key < med - iqr * multiplier)
 						outliers.Add(datum.Key, datum.Value);
 				
 				return outliers;
