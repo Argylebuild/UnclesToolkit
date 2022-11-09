@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Argyle.UnclesToolkit
@@ -42,5 +43,20 @@ namespace Argyle.UnclesToolkit
         public float TotalSoFar() => Time.realtimeSinceStartup - startTime;
 
         public float LapSoFar() => TotalSoFar() - lapsTotal;
+
+        /// <summary>
+        /// Don't let a dollar be waitin on dime! Don't be the reason the app is slowing beyond the min framerate.
+        /// If this particular task is taking longer than a single fram should, holds and waits for next frame.
+        /// Specifically setup for jobs with many actions that have to happen on the main thread. 
+        /// </summary>
+        /// <returns></returns>
+        public async UniTask NextFrameIfSlow()
+        {
+            if (LapSoFar() > 1 / Timing.Instance.MinFramerate * .5 ) //.5 because there's other stuff to do.
+            {
+                Lap();
+                await UniTask.NextFrame();
+            }
+        }
     }
 }

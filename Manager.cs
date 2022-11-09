@@ -1,3 +1,4 @@
+using System.Threading;
 using Argyle.Utilities;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -50,8 +51,7 @@ namespace Argyle.UnclesToolkit
         /// For very early calls where instance might not have been setup (like OnEnable),
         /// this lets us skip the call or wait until it's ready. 
         /// </summary>
-        public static bool IsInitialized => _isInitialized;
-        private static bool _isInitialized;
+        public static bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Async method for getting instance can be called at any time and will return when it's ready. 
@@ -59,7 +59,7 @@ namespace Argyle.UnclesToolkit
         /// <returns></returns>
         public async static UniTask<T> GetInstanceAsync()
         {
-            while (_isInitialized == false)
+            while (IsInitialized == false)
             {
                 await UniTask.NextFrame();
             }
@@ -78,9 +78,16 @@ namespace Argyle.UnclesToolkit
         {
             if(_instance == null)
                 _instance = this as T;
-            _isInitialized = true;
+            IsInitialized = true;
 
             _store = new SecureStore();
-        } 
+        }
+
+        public static async UniTask<bool> WaitUntilInitializedAsync()
+        {
+            await Timing.WaitFor(() => IsInitialized);
+            Debug.Log($"Manager initialized for {typeof(T)}");
+            return true;
+        }
     }
 }

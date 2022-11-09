@@ -1,18 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using API.Utility;
 using Cysharp.Threading.Tasks;
+using EasyButtons;
 using UnityEngine;
 
 namespace Argyle.UnclesToolkit
 {
     public class ArgyleComponent : MonoBehaviour
     {
-        private bool isReferenceSet = false;
+        private bool _isReferenceSet = false;
         private Transform _tForm;
+
+        public bool IsAwakeFinished { get; private set; } = false;
 
         protected void Awake()
         {
+            CancelObjectToken = CancelObjectSource.Token;
             WaitForPostStart();
+            IsAwakeFinished = true;
         }
+
+        protected UniTask WaitUntilAwakeIsFinishedAsync() => Timing.WaitFor(() => IsAwakeFinished);
+
+
+        /// <summary>
+        /// If using, make sure to call base.Start() last in any child classes. 
+        /// </summary>
+        public bool IsStartFinished { get; private set; } = false;
+
+        /// <summary>
+        /// If any functionality is waiting for start to be finished, make sure you call base.Start() last.
+        /// </summary>
+        private void Start()
+        {
+            IsStartFinished = true;
+        }
+
+        /// <summary>
+        /// If using, make sure to call base.Start() last in any child classes. 
+        /// </summary>
+        public UniTask WaitUntilStartIsFinishedAsync() => Timing.WaitFor(() => IsStartFinished);
+
 
         private async void WaitForPostStart()
         {
@@ -34,7 +65,7 @@ namespace Argyle.UnclesToolkit
         {
             get
             {
-                if(!isReferenceSet)
+                if(!_isReferenceSet)
                     SetReferences();
                 
                 return _tForm;
@@ -51,7 +82,7 @@ namespace Argyle.UnclesToolkit
         {
             get
             {
-                if (!isReferenceSet)
+                if (!_isReferenceSet)
                     SetReferences();
 
                 return _go;
@@ -64,7 +95,7 @@ namespace Argyle.UnclesToolkit
             _tForm = transform;
             _go = gameObject;
 
-            isReferenceSet = true;
+            _isReferenceSet = true;
         }
         
         /// <summary>
@@ -107,6 +138,46 @@ namespace Argyle.UnclesToolkit
         {
             enabled = !enabled;
         }
+
+
+
+        #region ==== Cancellation ====-----------------
+
+        private static CancellationTokenSource CancelClassSource = new CancellationTokenSource();
+        protected static CancellationToken CancelClassToken = CancelClassSource.Token;
+
+        private CancellationTokenSource CancelObjectSource = new CancellationTokenSource();
+        protected CancellationToken CancelObjectToken;
+
+        /// <summary>
+        /// If any of the cancellation tokens that apply to this objecty are cancelled, returns true.
+        /// Recommended for clean stopping of async processes that might have multiple reasons to stop.
+        /// NOTE: Only the default tokens from ArgyleComponent are included. Custom tokens must be considered seperately. 
+        /// </summary>
+        protected bool CancelAny => ThreadingUtility.QuitToken.IsCancellationRequested || 
+                                    CancelClassToken.IsCancellationRequested ||
+                                    CancelObjectToken.IsCancellationRequested;
         
+
+        /// <summary>
+        /// Cancel async functions for all objects of this class (inherited classes).
+        /// Can access cancellation bia CancelClassToken or CancelAny.
+        /// </summary>
+        public void CancelClass()
+        {
+            CancelClassSource.Cancel();
+        }
+
+        /// <summary>
+        /// Cancel async functions for this particular object (instance).
+        /// Can access cancellation bia CancelObjectToken or CancelAny.
+        /// </summary>
+        public void CancelObject()
+        {
+            CancelObjectSource.Cancel();
+        }
+
+        
+        #endregion ------------------/Cancellation ====
     }
 }

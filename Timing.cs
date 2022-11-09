@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Argyle.UnclesToolkit
@@ -86,7 +87,42 @@ namespace Argyle.UnclesToolkit
 			}
 		}
 
-		
+		/// <summary>
+		/// Method to execute until returns true.
+		/// </summary>
+		public delegate bool WaitCondition();
+
+
+		/// <summary>
+		/// waits for a condition to evaluate true. Wait time is exponentially increased until timeout is reached. 
+		/// </summary>
+		/// <param name="condition"></param>
+		/// <param name="cancelToken"></param>
+		/// <param name="timeOut">maximum wait time in milliseconds</param>
+		/// <returns></returns>
+		public static async UniTask<bool> WaitFor(WaitCondition condition, CancellationToken cancelToken = default, 
+			int timeOut = 10000)
+		{
+			bool isSuccess = true;
+			int waitTime = 10;
+			while (!condition.Invoke())
+			{
+				await UniTask.Delay(waitTime);
+				waitTime += waitTime;
+
+				if (waitTime > timeOut || 
+				    cancelToken.IsCancellationRequested || 
+				    CancelClassToken.IsCancellationRequested ||
+				    ThreadingUtility.QuitToken.IsCancellationRequested)
+				{
+					isSuccess = false;
+					break;
+				}
+			}
+
+			return isSuccess;
+
+		}
 		
 	}
 }
