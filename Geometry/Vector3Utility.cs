@@ -266,6 +266,17 @@ namespace Argyle.UnclesToolkit.Geometry
 
 		#endregion ------------------/New vector3 ====
 		
+		/// <summary>
+		/// Copypasta from MRTK. Checks whether a vector3 has NaN or infinite values. 
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <returns></returns>
+		public static bool IsValidVector(this Vector3 vector)
+		{
+			return !float.IsNaN(vector.x) && !float.IsNaN(vector.y) && !float.IsNaN(vector.z) &&
+			       !float.IsInfinity(vector.x) && !float.IsInfinity(vector.y) && !float.IsInfinity(vector.z);
+		}
+
 		
 	}
 }
