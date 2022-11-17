@@ -18,10 +18,23 @@ namespace Argyle.UnclesToolkit
 
         protected void Awake()
         {
-            CancelObjectToken = CancelObjectSource.Token;
             WaitForPostStart();
             IsAwakeFinished = true;
         }
+
+        /// <summary>
+        /// If any functionality is waiting for start to be finished, make sure you call base.Start() last.
+        /// </summary>
+        private void Start()
+        {
+            IsStartFinished = true;
+        }
+
+        protected void OnDestroy()
+        {
+            CancelObject();
+        }
+
 
         protected UniTask WaitUntilAwakeIsFinishedAsync() => Timing.WaitFor(() => IsAwakeFinished);
 
@@ -31,13 +44,6 @@ namespace Argyle.UnclesToolkit
         /// </summary>
         public bool IsStartFinished { get; private set; } = false;
 
-        /// <summary>
-        /// If any functionality is waiting for start to be finished, make sure you call base.Start() last.
-        /// </summary>
-        private void Start()
-        {
-            IsStartFinished = true;
-        }
 
         /// <summary>
         /// If using, make sure to call base.Start() last in any child classes. 
@@ -143,30 +149,29 @@ namespace Argyle.UnclesToolkit
 
         #region ==== Cancellation ====-----------------
 
-        private static CancellationTokenSource CancelClassSource = new CancellationTokenSource();
-        protected static CancellationToken CancelClassToken = CancelClassSource.Token;
+        // private static HashSet<CancellationTokenSource> CancelClassSources = new HashSet<CancellationTokenSource>();
 
-        private CancellationTokenSource CancelObjectSource = new CancellationTokenSource();
-        protected CancellationToken CancelObjectToken;
-
-        /// <summary>
-        /// If any of the cancellation tokens that apply to this objecty are cancelled, returns true.
-        /// Recommended for clean stopping of async processes that might have multiple reasons to stop.
-        /// NOTE: Only the default tokens from ArgyleComponent are included. Custom tokens must be considered seperately. 
-        /// </summary>
-        protected bool CancelAny => ThreadingUtility.QuitToken.IsCancellationRequested || 
-                                    CancelClassToken.IsCancellationRequested ||
-                                    CancelObjectToken.IsCancellationRequested;
+        private HashSet<CancellationTokenSource> CancelObjectSources = new HashSet<CancellationTokenSource>();
         
 
-        /// <summary>
-        /// Cancel async functions for all objects of this class (inherited classes).
-        /// Can access cancellation bia CancelClassToken or CancelAny.
-        /// </summary>
-        public void CancelClass()
-        {
-            CancelClassSource.Cancel();
-        }
+        // /// <summary>
+        // /// Cancel async functions added to this class (inherited classes).
+        // /// </summary>
+        // public static void CancelClass()
+        // {
+        //     foreach (var source in CancelClassSources)
+        //     {
+        //         source.Cancel();
+        //     }
+        // }
+        //
+        // public static CancellationToken AddCancelToClass()
+        // {
+        //     CancellationTokenSource source = new CancellationTokenSource();
+        //     CancelClassSources.Add(source);
+        //
+        //     return source.Token;
+        // }
 
         /// <summary>
         /// Cancel async functions for this particular object (instance).
@@ -174,10 +179,43 @@ namespace Argyle.UnclesToolkit
         /// </summary>
         public void CancelObject()
         {
-            CancelObjectSource.Cancel();
+            foreach (var source in CancelObjectSources)
+            {
+                source.Cancel();
+            }
         }
 
-        
+        protected CancellationToken AddCancelToObject()
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancelObjectSources.Add(source);
+
+            return source.Token;
+        }
+
+        protected void ReleaseCancel(CancellationToken token)
+        {
+            // foreach (var source in CancelClassSources)
+            // {
+            //     if (source.Token == token)
+            //     {
+            //         CancelClassSources.Remove(source);
+            //         return;
+            //     }
+            // }
+            foreach (var source in CancelObjectSources)
+            {
+                if (source.Token == token)
+                {
+                    CancelObjectSources.Remove(source);
+                    return;
+                }
+            }
+
+        }
+
+
+
         #endregion ------------------/Cancellation ====
     }
 }

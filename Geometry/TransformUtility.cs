@@ -132,7 +132,7 @@ namespace Argyle.UnclesToolkit.Geometry
         /// <returns></returns>
         public static Transform Copy(Transform source)
         {
-            Transform copy = new GameObject().transform;
+            Transform copy = new GameObject("CopyTransform").transform;
             copy.parent = source.parent;
             copy.position = source.position;
             copy.rotation = source.rotation;

@@ -145,13 +145,6 @@ namespace Argyle.UnclesToolkit
 			//else
 			Debug.LogWarning($"{FullPath(fileName)} not found in filestructure. Returning null");
 			return null;
-
-			// using (BinaryReader br = new BinaryReader(
-			// 	File.Open(FullPath(fileName), FileMode.Open)))
-			// {
-			// 	string thing = br.ReadString();//.Decrypt();
-			// 	return thing;
-			// }
 		}
 
 		public bool Exists(string fileName)

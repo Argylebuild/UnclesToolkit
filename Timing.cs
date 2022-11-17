@@ -112,7 +112,6 @@ namespace Argyle.UnclesToolkit
 
 				if (waitTime > timeOut || 
 				    cancelToken.IsCancellationRequested || 
-				    CancelClassToken.IsCancellationRequested ||
 				    ThreadingUtility.QuitToken.IsCancellationRequested)
 				{
 					isSuccess = false;
