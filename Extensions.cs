@@ -241,6 +241,12 @@ namespace Argyle.UnclesToolkit
 		/// <returns></returns>
 		public static List<float> Squash(this ICollection<float> inputs, float curve = 1, float offset = 0)
 		{
+			if(inputs.Count < 5)
+			{
+				Debug.LogWarning($"Trying to squash inputs with less than 5 elements. Returning improperly squashed");
+				return inputs.ToList();
+			}		
+			
 			List<float> outputs = new List<float>();
 			float min = inputs.Min();
 			float max = inputs.Max();
