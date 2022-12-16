@@ -145,8 +145,67 @@ namespace Argyle.UnclesToolkit
             enabled = !enabled;
         }
 
+        
+        
+        
+        
+        #region ==== Logging ====------------------
 
+        /// <summary>
+        /// Log to the Unity Debugger and the Console along with info about caller and type.
+        /// Helps search for specific logs and groups of logs.
+        /// </summary>
+        /// <param name="message">Primary message. Can directly replace the existing Debug.Log() message</param>
+        /// <param name="tags">An optional list of tags to help narrow logs. </param>
+        protected void Log(string message, List<string> tags = null)
+        {
+            string log = Prefixed(message, tags);
+            Debug.Log(log);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine(log);
+        }
 
+        protected void LogWarning(string message, List<string> tags = null)
+        {
+            string log = $"WARNING - {Prefixed(message, tags)}";
+            Debug.LogWarning(log);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(log);
+        }
+
+        protected void LogError(string message, List<string> tags = null)
+        {
+            string log = $"ERROR - {Prefixed(message, tags)}";
+            Debug.LogError(log);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(log);
+        }
+
+        protected void LogException(string message, List<string> tags = null)
+        {
+            string log = $"EXCEPTION - {Prefixed(message, tags)}";
+            LogException(log);
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine(log);
+        }
+
+        public void LogException(Exception e) => LogException(e.Message);
+
+        private string Prefixed(string message, List<string> tags)
+        {
+            var t = GetType();
+            string prefixed = $"{t.Namespace}.{t.Name}: {message}";
+            if(tags != null)
+                foreach (var tag in tags)
+                    prefixed += $", {tag}";
+            return prefixed;
+        }
+
+        #endregion -----------------/Logging ====
+
+        
+        
+        
         #region ==== Cancellation ====-----------------
 
         // private static HashSet<CancellationTokenSource> CancelClassSources = new HashSet<CancellationTokenSource>();
