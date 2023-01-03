@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Argyle.Utilities.Geometry
+namespace Argyle.UnclesToolkit.Geometry
 {
     public static class TransformUtility 
     {
@@ -126,5 +126,19 @@ namespace Argyle.Utilities.Geometry
 
         }
 
+        /// <summary>
+        /// Creates a snapshot of the source coordinate system for making transformations. 
+        /// </summary>
+        /// <returns></returns>
+        public static Transform Copy(Transform source)
+        {
+            Transform copy = new GameObject("CopyTransform").transform;
+            copy.parent = source.parent;
+            copy.position = source.position;
+            copy.rotation = source.rotation;
+            copy.localScale = source.localScale;
+
+            return copy;
+        }
     }
 }

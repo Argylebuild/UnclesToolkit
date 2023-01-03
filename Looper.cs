@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	
 	/// <summary>
@@ -152,7 +152,7 @@ namespace Argyle.Utilities
 				{
 					foreach (var iteration in _iterations)
 					{
-						if(!Application.isPlaying || !IsLooping)
+						if(!Application.isPlaying || !IsLooping || ThreadingUtility.QuitToken.IsCancellationRequested)
 						{
 							_isStopped = true;
 							currentMethod = $"None. Last method: {currentMethod}";
@@ -163,7 +163,7 @@ namespace Argyle.Utilities
 					}				
 					foreach (var iteration in _iterationsAsync)
 					{
-						if(!Application.isPlaying || !IsLooping)
+						if(!Application.isPlaying || !IsLooping || ThreadingUtility.QuitToken.IsCancellationRequested)
 						{
 							_isStopped = true;
 							currentMethod = $"None. Last method: {currentMethod}";
@@ -176,7 +176,7 @@ namespace Argyle.Utilities
 				catch (Exception e)
 				{
 					Debug.LogException(e);
-					_isStopped = true;
+					//_isStopped = true;
 				}
 
 				currentMethod = "None. Finished.";

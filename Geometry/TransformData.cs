@@ -2,7 +2,7 @@
 using Microsoft.MixedReality.Toolkit;
 using UnityEngine;
 
-namespace Argyle.Utilities.Geometry
+namespace Argyle.UnclesToolkit.Geometry
 {
     [Serializable]
     public struct TransformData

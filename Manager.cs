@@ -1,9 +1,9 @@
-using System.Reflection;
+using System.Threading;
+using Argyle.Utilities;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
     /// <summary>
     /// Manager is used as a base class for classes that would want to be static
@@ -51,8 +51,7 @@ namespace Argyle.Utilities
         /// For very early calls where instance might not have been setup (like OnEnable),
         /// this lets us skip the call or wait until it's ready. 
         /// </summary>
-        public static bool IsInitialized => _isInitialized;
-        private static bool _isInitialized;
+        public static bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Async method for getting instance can be called at any time and will return when it's ready. 
@@ -60,7 +59,7 @@ namespace Argyle.Utilities
         /// <returns></returns>
         public async static UniTask<T> GetInstanceAsync()
         {
-            while (_isInitialized == false)
+            while (IsInitialized == false)
             {
                 await UniTask.NextFrame();
             }
@@ -79,9 +78,16 @@ namespace Argyle.Utilities
         {
             if(_instance == null)
                 _instance = this as T;
-            _isInitialized = true;
+            IsInitialized = true;
 
             _store = new SecureStore();
-        } 
+        }
+
+        public static async UniTask<bool> WaitUntilInitializedAsync()
+        {
+            await Timing.WaitFor(() => IsInitialized);
+            Debug.Log($"Manager initialized for {typeof(T)}");
+            return true;
+        }
     }
 }

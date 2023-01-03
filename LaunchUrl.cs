@@ -5,7 +5,7 @@ using UnityEngine;
 
 //copied from Microsoft.MixedReality.Toolkit.Examples.Demos
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
     [AddComponentMenu("Scripts/MRTK/Examples/LaunchUrl")]
     public class LaunchUrl : MonoBehaviour

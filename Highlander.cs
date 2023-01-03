@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
     /// <summary>
     /// There can be only one. 

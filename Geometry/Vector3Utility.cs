@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Argyle.Utilities;
 using UnityEngine;
 
-namespace Argyle.Utilities.Geometry
+namespace Argyle.UnclesToolkit.Geometry
 {
 	public static class Vector3Utility
 	{
@@ -249,9 +250,33 @@ namespace Argyle.Utilities.Geometry
 		
 
 		#endregion /Should probably be extensions
+
+
+		#region ==== New vector3 ====-----------------
+
+		/// <summary>
+		/// Creates a randomized vector3 where each component is randomized then the whole is normalized.
+		/// </summary>
+		/// <returns></returns>
+		public static Vector3 Random() =>
+			Vector3.Normalize(new Vector3(
+				new System.Random().Next(),
+				new System.Random().Next(),
+				new System.Random().Next()));
+
+		#endregion ------------------/New vector3 ====
 		
-		
-		
+		/// <summary>
+		/// Copypasta from MRTK. Checks whether a vector3 has NaN or infinite values. 
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <returns></returns>
+		public static bool IsValidVector(this Vector3 vector)
+		{
+			return !float.IsNaN(vector.x) && !float.IsNaN(vector.y) && !float.IsNaN(vector.z) &&
+			       !float.IsInfinity(vector.x) && !float.IsInfinity(vector.y) && !float.IsInfinity(vector.z);
+		}
+
 		
 	}
 }

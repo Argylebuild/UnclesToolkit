@@ -1,9 +1,9 @@
-using System;
-using Argyle.Utilities.Geometry;
+using Argyle.UnclesToolkit.Geometry;
+using Argyle.Utilities;
 using EasyButtons;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
 	
 	/// <summary>

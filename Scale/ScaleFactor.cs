@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Argyle
+namespace Argyle.UnclesToolkit.Scale
 {
     [CreateAssetMenu(fileName = "scale", menuName = "Argyle/ScaleFactor", order = 1)]
     public class ScaleFactor : ArgyleScriptableObject

@@ -1,7 +1,8 @@
 using System;
+using Argyle.Utilities;
 using UnityEngine;
 
-namespace Argyle.Utilities
+namespace Argyle.UnclesToolkit
 {
     public class Awareness : ArgyleComponent
     {
