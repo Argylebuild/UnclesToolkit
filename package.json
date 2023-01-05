@@ -1,16 +1,16 @@
 {
-    "name": "build.argyle.unclestoolkit",
-    "version": "0.11.02",
-    "displayName": "Uncles Toolkit",
-    "description": "The helper used in building Argyle's augmented reality app",
-    "keywords": [
-        "AR",
-        "Argyle",
-        "utility"
-    ],
-    "author": {
-        "name": "Argyle",
-        "email": "uncle@argyle.build",
-        "url": "https://www.argyle.build/"
-    }
+  "name": "build.argyle.unclestoolkit",
+  "version": "1.0.0",
+  "displayName": "Uncles Toolkit",
+  "description": "The helper used in building Argyle's augmented reality app",
+  "keywords": [
+    "AR",
+    "Argyle",
+    "utility"
+  ],
+  "author": {
+    "name": "Argyle",
+    "email": "uncle@argyle.build",
+    "url": "https://www.argyle.build/"
+  }
 }
