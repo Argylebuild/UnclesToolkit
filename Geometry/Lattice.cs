@@ -206,7 +206,17 @@ namespace Argyle.UnclesToolkit.Geometry
 			{
 				var cells = Surrounding(coord, i);
 				if (cells.Count > 0)
-					return cells[0].CellPosition;
+				{
+					Cell<T> closest = cells[0];
+					foreach (var cell in cells)
+					{
+						if (Vector3.Distance(point, CellPositionToPoint(cell.CellPosition)) <
+						    Vector3.Distance(point, CellPositionToPoint(closest.CellPosition)))
+							closest = cell;
+					}
+
+					return closest.CellPosition;
+				}
 			}
 
 			//Unable to find. Default value
