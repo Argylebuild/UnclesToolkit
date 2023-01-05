@@ -100,9 +100,9 @@ namespace Argyle.UnclesToolkit.Geometry
 			Vector3Int maxCell = PointToCellPosition(max);
 			Vector3Int range = maxCell - minCell;
 
-			for (int i = 0; i < range.x; i++)
-				for (int j = 0; j < range.y; j++)
-					for (int k = 0; k < range.z; k++)
+			for (int i = 0; i <= range.x; i++)
+				for (int j = 0; j <= range.y; j++)
+					for (int k = 0; k <= range.z; k++)
 							Add(new Vector3Int(minCell.x + i,minCell.y + j,minCell.z + k), thing);
 		}
 
@@ -169,7 +169,16 @@ namespace Argyle.UnclesToolkit.Geometry
 		/// </summary>
 		/// <param name="point"></param>
 		/// <returns></returns>
-		public Cell<T> ClosestCell(Vector3 point) => Cells[ClosestCellPosition(point)];
+		public Cell<T> ClosestCell(Vector3 point)
+		{
+			var closest = ClosestCellPosition(point);
+			if (Cells.ContainsKey(closest))
+				return Cells[closest];
+			else
+				return null;
+
+
+		}
 
 		/// <summary>
 		/// Find the closest cell position that contains content.
@@ -181,7 +190,7 @@ namespace Argyle.UnclesToolkit.Geometry
 		private Vector3Int ClosestCellPosition(Vector3 point)
 		{
 			//quit early if empty
-			if (Cells.Count ! > 0)
+			if (Cells.Count <= 0)
 				return Vector3Int.zero;
 			
 			//cheaply make sure it's within the extents of the set.
@@ -215,13 +224,24 @@ namespace Argyle.UnclesToolkit.Geometry
 				Mathf.RoundToInt(point.z / CellSize));
 
 		/// <summary>
+		/// Reversing the translation to get the precise location of the center of a given cell prosition. 
+		/// </summary>
+		/// <param name="cellPosition"></param>
+		/// <returns></returns>
+		public Vector3 CellPositionToPoint(Vector3Int cellPosition) => new Vector3(
+			cellPosition.x * CellSize,
+			cellPosition.y * CellSize,
+			cellPosition.z * CellSize
+		);
+
+		/// <summary>
 		/// Collects the list of all cells surrounding a given cellposition that contain content.
 		/// Includes the center and all cells between center and edges. 
 		/// </summary>
 		/// <param name="center"></param>
 		/// <param name="distance">How many cells away from the center to include.</param>
 		/// <returns></returns>
-		private List<Cell<T>> Surrounding(Vector3Int center, int distance)
+		public List<Cell<T>> Surrounding(Vector3Int center, int distance)
 		{
 			List<Cell<T>> surrounding = new List<Cell<T>>();
 			foreach (var pos in SurroundingPositions(center, distance))
