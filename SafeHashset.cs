@@ -5,7 +5,7 @@ namespace Argyle.UnclesToolkit
 {
 	/// <summary>
 	/// This hashset can be used in foreach loops without risk of exception because the set changes mid loop.
-	/// loop checks out before starting, then checks in when finished. Any change to the loop mus happen following WaitForReady.
+	/// loop checks out before starting, then checks in when finished. Any change to the loop must happen following WaitForReady.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class SafeHashset<T> : HashSet<T>
