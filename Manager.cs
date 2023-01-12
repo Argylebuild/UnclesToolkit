@@ -86,7 +86,6 @@ namespace Argyle.UnclesToolkit
         public static async UniTask<bool> WaitUntilInitializedAsync()
         {
             await Timing.WaitFor(() => IsInitialized);
-            Debug.Log($"Manager initialized for {typeof(T)}");
             return true;
         }
     }
