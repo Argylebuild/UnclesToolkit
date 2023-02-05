@@ -9,24 +9,29 @@ namespace Argyle.UnclesToolkit
 	/// Object pooling manager. Handles instantiation, collection, clearing.
 	/// I almost called the class LifeGuard! Aren't you glad I'm so restrained??
 	/// </summary>
-	public class Pool
+	public class Pool : ArgyleComponent
 	{
 		#region ==== Configuration ====------------------
 
 		public GameObject Prefab { get; private set; }
 		public int MinSize { get; private set; }
 		private Transform _parent;
+		public int tempCount;
 
 		#endregion -----------------/Configuration ====
 
 		
 		public Queue<GameObject> WaitingThings = new Queue<GameObject>();
+		public List<GameObject> Preload = new List<GameObject>();
 
-		
-		
+		private void Update()
+		{
+			tempCount = WaitingThings.Count;
+		}
+
 		#region ==== CTOR,  Setup ====------------------
 
-		public Pool(GameObject prefab, int size, Transform parent = null, bool buildAtStart = true)
+		public void Setup(GameObject prefab, int size, Transform parent = null, bool buildAtStart = true)
 		{
 			Prefab = prefab;
 			MinSize = size;
@@ -42,9 +47,14 @@ namespace Argyle.UnclesToolkit
 			Stopwatch sw = new Stopwatch();
 			for (int i = 0; i < MinSize; i++)
 			{
-				WaitingThings.Enqueue(GameObject.Instantiate(Prefab, _parent));
-				await sw.NextFrameIfSlow();
+				if(i < Preload.Count)
+					WaitingThings.Enqueue(Preload[i]);
+				else
+					WaitingThings.Enqueue(GameObject.Instantiate(Prefab, _parent));
+					await sw.NextFrameIfSlow();
 			}
+
+			Preload = new List<GameObject>();
 			Debug.Log($"Instantiated {MinSize} pool objects in {sw.TotalSoFar()} seconds");
 		}
 
