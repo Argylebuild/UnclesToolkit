@@ -13,33 +13,19 @@ namespace Argyle.UnclesToolkit
 	{
 		#region ==== Configuration ====------------------
 
-		public GameObject Prefab { get; private set; }
-		public int MinSize { get; private set; }
+		public GameObject Prefab;
+		public int MinSize;
 		private Transform _parent;
-		public int tempCount;
+		public List<GameObject> Preload = new List<GameObject>();
 
 		#endregion -----------------/Configuration ====
 
-		
 		public Queue<GameObject> WaitingThings = new Queue<GameObject>();
-		public List<GameObject> Preload = new List<GameObject>();
-
-		private void Update()
-		{
-			tempCount = WaitingThings.Count;
-		}
-
+		
+		
+		
 		#region ==== CTOR,  Setup ====------------------
 
-		public void Setup(GameObject prefab, int size, Transform parent = null, bool buildAtStart = true)
-		{
-			Prefab = prefab;
-			MinSize = size;
-			_parent = parent;
-
-			if (buildAtStart)
-				BuildAsync();
-		}
 
 		public async void BuildAsync() => await BuildAwaitable();
 		public async UniTask BuildAwaitable()
@@ -50,8 +36,10 @@ namespace Argyle.UnclesToolkit
 				if(i < Preload.Count)
 					WaitingThings.Enqueue(Preload[i]);
 				else
+				{
 					WaitingThings.Enqueue(GameObject.Instantiate(Prefab, _parent));
 					await sw.NextFrameIfSlow();
+				}			
 			}
 
 			Preload = new List<GameObject>();
