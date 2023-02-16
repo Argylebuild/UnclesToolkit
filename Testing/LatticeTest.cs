@@ -4,7 +4,6 @@ using System.Linq;
 using Argyle.UnclesToolkit.Geometry;
 using EasyButtons;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Argyle.UnclesToolkit.Testing
@@ -50,7 +49,7 @@ namespace Argyle.UnclesToolkit.Testing
                 if(thing == ThingContainer)
                     continue;
                 if (!thing.GetComponent<LatticeThingTest>())
-                    thing.AddComponent<LatticeThingTest>();
+                    thing.gameObject.AddComponent<LatticeThingTest>();
                 
                 Bounds b = thing.GetComponent<MeshRenderer>().bounds;
                 _lattice.AddByMinMax(TForm.InverseTransformPoint(b.min), TForm.InverseTransformPoint(b.max), thing.gameObject);

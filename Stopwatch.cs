@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Argyle.UnclesToolkit
 {
-    class Stopwatch
+    public class Stopwatch
     {
         private float startTime;
         private float lapsTotal = 0;

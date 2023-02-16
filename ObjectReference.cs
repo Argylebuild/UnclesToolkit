@@ -46,7 +46,10 @@ namespace Argyle.UnclesToolkit
 				{
 					var original = referenceDic[objectReference.marker];//for debug
 					var duplicate = objectReference;
-					Debug.LogWarning($"Duplicate markers found for {objectReference.marker.name}.");
+					Debug.LogWarning($"Duplicate markers found for {objectReference.marker.name}. \n" +
+					                 $"Original on object: {original.GO.name}. \n" +
+					                 $"Duplicate on object: {duplicate.GO.name}");
+					
 					//Destroy(objectReference); //for that weird camera copy thing. 
 				}				
 				else

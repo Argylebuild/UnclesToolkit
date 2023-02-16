@@ -112,6 +112,15 @@ namespace Argyle.UnclesToolkit
 
 		}
 
+		public void StoreAppendAsync(string thing, string fileName)
+		{
+			string fullPath = FullPath(fileName);
+			string justPath = Path.GetDirectoryName(FullPath(fileName));
+			//make sure the location exists
+			Directory.CreateDirectory(justPath);
+			File.AppendAllText(fullPath, thing);
+		}
+
 		public async UniTask<NativeArray<byte>> RetrieveBinaryAsync(string fileName)
 		{
 			var file = File.Open(FullPath(fileName), FileMode.Open);
