@@ -157,7 +157,7 @@ namespace Argyle.UnclesToolkit
         /// </summary>
         /// <param name="message">Primary message. Can directly replace the existing Debug.Log() message</param>
         /// <param name="tags">An optional list of tags to help narrow logs. </param>
-        protected void Log(string message, List<string> tags = null)
+        public void Log(string message, List<string> tags = null)
         {
             string log = Prefixed(message, tags);
             Debug.Log(log);
@@ -194,7 +194,7 @@ namespace Argyle.UnclesToolkit
         private string Prefixed(string message, List<string> tags)
         {
             var t = GetType();
-            string prefixed = $"{t.Namespace}.{t.Name}: {message}";
+            string prefixed = $"Argyle {t.Namespace}.{t.Name}: {message}";
             if(tags != null)
                 foreach (var tag in tags)
                     prefixed += $", {tag}";
