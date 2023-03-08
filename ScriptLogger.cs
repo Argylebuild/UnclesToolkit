@@ -138,7 +138,7 @@ namespace Argyle.UnclesToolkit
 		public async void SaveToFile(string newStuff)
 		{
 			await Timing.WaitFor(() => { return _store != null; });
-			await _store.StoreAppendAsync(newStuff, _fileName);
+			_store.StoreAppendAsync(newStuff, _fileName);
 		}
 		
 
