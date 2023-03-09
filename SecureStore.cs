@@ -101,6 +101,8 @@ namespace Argyle.UnclesToolkit
 			                 $"{SecureFolder}{Path.DirectorySeparatorChar}";
 		}
 
+		#region ==== Store ====------------------
+
 
 		/// <summary>
 		/// Simple save object as encrypted json in binary.
@@ -206,21 +208,45 @@ namespace Argyle.UnclesToolkit
 		/// <param name="fileName"></param>
 		public async UniTask StoreAppendAsync(string thing, string fileName) => 
 			await File.AppendAllTextAsync(FullPath(fileName), thing);
+		
 
-		public async UniTask<NativeArray<byte>> RetrieveBinaryAsync(string fileName)
+		#endregion -----------------/Store ====
+
+		
+		
+		#region ==== Retrieve ====------------------
+
+
+		public async UniTask<byte[]> RetrieveBinaryAsync(string fileName)
 		{
-			var file = File.Open(FullPath(fileName), FileMode.Open);
+			string fullPath = FullPath(fileName);
 
-			Debug.Log($"Reading {FullPath(fileName)}...");
+			if (!File.Exists(fullPath))
+			{
+				Debug.Log($"File {fullPath} does not exist.");
+				return null;
+			}
 
+			var file = File.Open(fullPath, FileMode.Open);
+
+			Debug.Log($"Reading {fullPath}...");
 			var binaryReader = new BinaryReader(file);
 			var bytes = await UniTask.RunOnThreadPool(()=> binaryReader.ReadBytes((int) file.Length));
+			binaryReader.Dispose();
 
+			return bytes;
+		}
+
+		public async UniTask<NativeArray<byte>> RetrieveNativeBinaryAsync(string fileName)
+		{
+			var bytes = await RetrieveBinaryAsync(fileName);
+			
 			var data = new NativeArray<byte>(bytes.Length, Allocator.Temp);
 			data.CopyFrom(bytes.ToArray());
-			
+
 			return data;
 		}
+
 
 		public T Retrieve<T>(string fileName) where T : class
 		{
@@ -241,6 +267,8 @@ namespace Argyle.UnclesToolkit
 			Debug.LogWarning($"{FullPath(fileName)} not found in filestructure. Returning null");
 			return null;
 		}
+
+		#endregion -----------------/Retrieve ====
 
 		public bool Exists(string fileName)
 		{
