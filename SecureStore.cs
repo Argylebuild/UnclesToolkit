@@ -27,7 +27,7 @@ namespace Argyle.UnclesToolkit
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <returns></returns>
-		private string FullPath(string fileName)
+		public string FullPath(string fileName)
 		{
 			string fullpath = Path.Combine(DirectoryPath(), fileName);
 
