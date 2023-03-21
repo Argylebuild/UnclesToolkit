@@ -271,6 +271,33 @@ namespace Argyle.UnclesToolkit
 		#endregion ------------------/GameObject ====
 
 
+		#region ==== Collection ====------------------
+
+		/// <summary>
+		/// Safely adds or updates the value of a potential dictionary key.
+		/// </summary>
+		/// <param name="dic"></param>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
+		/// <typeparam name="TKey"></typeparam>
+		/// <typeparam name="TValue"></typeparam>
+		/// <returns>If a new addition, return true.</returns>
+		public static bool AddOrUpdate<TKey, TValue>(this Dictionary<TKey,TValue> dic, TKey key, TValue value)
+		{
+			if (!dic.ContainsKey(key))
+			{
+				dic.Add(key, value);
+				return true;
+
+			}			
+			//if key already present
+			dic[key] = value;
+			return false;
+		}
+
+
+		#endregion -----------------/Collection ====
+
 	}
 
 }
