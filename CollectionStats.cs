@@ -180,29 +180,30 @@ namespace Argyle.UnclesToolkit
 			{
 
 				//reorganize data into multiple collections for stat analysis
-				SortedList<float, T>[] statCollections = new SortedList<float, T>[dataKeys[0].Length];
+				SortedList<float, T>[] colPerDim = new SortedList<float, T>[dataKeys[0].Length];
+				for (int i = 0; i < colPerDim.Length; i++)
+					colPerDim[i] = new SortedList<float, T>();
+				
 				foreach (var datum in data)
 				{
-					for (int i = 0; i < datum.Key.Length; i++)
-					{
-						if (statCollections[i] == null)
-							statCollections[i] = new SortedList<float, T>();
-						if(!statCollections[i].ContainsKey(datum.Key[i]))
-							statCollections[i].Add(datum.Key[i], datum.Value);
-					}
+					var dimensions = datum.Key;
+					
+					for (int i = 0; i < dimensions.Length; i++)
+						if(!colPerDim[i].ContainsKey(dimensions[i]))
+							colPerDim[i].Add(dimensions[i], datum.Value);
 				}
 
-				for (int i = 0; i < statCollections.Length; i++)
+				for (int i = 0; i < colPerDim.Length; i++)
 				{
-					var outliers = statCollections[i].Outliers(multiplier);
-					for (int j = 0; j < statCollections[i].Count; j++)
+					var outliers = colPerDim[i].Outliers(multiplier);
+					for (int j = 0; j < colPerDim[i].Count; j++)
 					{
-						if(outliers.ContainsKey(statCollections[i].Keys[j]))
+						if(outliers.ContainsKey(colPerDim[i].Keys[j]))
 						{
 							var outlier = dataKeys[j];
 							
 							if(!allOutliers.ContainsKey(outlier))
-								allOutliers.Add(dataKeys[j], outliers[statCollections[i].Keys[j]]);
+								allOutliers.Add(dataKeys[j], outliers[colPerDim[i].Keys[j]]);
 						}					
 					}
 				}
