@@ -92,10 +92,13 @@ namespace Argyle.UnclesToolkit
 		/// </summary>
 		/// <param name="duration">Time in seconds between loops.
 		/// If 0, runs every frame.</param>
-		public Looper(string name, float duration)
+		public Looper(string name, float duration, bool autoStart = false)
 		{
 			Name = name;
 			LoopDuration = duration;
+			
+			if(autoStart)
+				StartLoop();
 		}
 		
 		
