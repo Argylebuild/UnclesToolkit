@@ -25,7 +25,7 @@ namespace Argyle.UnclesToolkit
         /// <summary>
         /// If any functionality is waiting for start to be finished, make sure you call base.Start() last.
         /// </summary>
-        private void Start()
+        protected virtual void Start()
         {
             IsStartFinished = true;
         }

@@ -4,7 +4,7 @@ namespace Argyle.UnclesToolkit
 {
 	public class BoolWatcher
 	{
-		public bool PreviousState { get; private set; }
+		public bool LastState { get; private set; }
 		private bool IsStateChanged { get; set; }
 
 		public delegate bool Evaluation();
@@ -23,18 +23,24 @@ namespace Argyle.UnclesToolkit
 			looper?.Add(Evaluate).StartLoop();
 		}
 
+		/// <summary>
+		/// Checks the current state agains the state from the last state evaluation.
+		/// If changed, sets IsStateChanged to true and invokes OnStateChangedTo and OnStateChanged.
+		/// If unchanged, leaves IsStateChanged alone.
+		/// </summary>
 		public void Evaluate()
 		{
 			var state = EvaluationMethod();
 			
-			IsStateChanged = state != PreviousState;
-			PreviousState = state;
-
-			if (IsStateChanged)
+			//runs anytime state changes but leaves existing IsStateChanged = true values alone
+			if(state != LastState)
 			{
+				IsStateChanged = true;
+				
 				OnStateChangedTo.Invoke(state);
 				OnStateChanged.Invoke();
-			}
+			}			
+			LastState = state;
 		}
 		
 		/// <summary>
@@ -45,14 +51,10 @@ namespace Argyle.UnclesToolkit
 		/// <returns></returns>
 		public bool Check()
 		{
-			if (IsStateChanged)
-			{
-				PreviousState = !PreviousState;
-				IsStateChanged = false;
-				return true;
-			}
+			if (!IsStateChanged) return false;
 			
-			return false;
+			IsStateChanged = false;
+			return true;
 		}
 
 		/// <summary>
@@ -64,5 +66,6 @@ namespace Argyle.UnclesToolkit
 			Evaluate();
 			return Check();
 		}
+		
 	}
 }
