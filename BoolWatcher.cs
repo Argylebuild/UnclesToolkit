@@ -37,7 +37,8 @@ namespace Argyle.UnclesToolkit
 			{
 				IsStateChanged = true;
 				
-				OnStateChangedTo.Invoke(state);
+				if(OnStateChangedTo != null)
+					OnStateChangedTo.Invoke(state);
 				OnStateChanged.Invoke();
 			}			
 			LastState = state;
