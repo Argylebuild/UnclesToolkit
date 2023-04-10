@@ -4,25 +4,29 @@ namespace Argyle.UnclesToolkit
 {
 	public static class UnitConvert
 	{
-		public static float MetersToFeet(this float meters)
+		public static float MetersToFeet(this float meters, float exponent = 1)
 		{
-			return meters * 3.28084f;
+			return meters * Mathf.Pow(3.28084f,exponent);
 		}
 
-		public static float FeetToMeters(this float feet)
+		public static float FeetToMeters(this float feet, float exponent = 1)
 		{
-			return feet / 3.28084f;
+			return feet / Mathf.Pow(3.28084f, exponent);
 		}
 
     
     
-		public static string MetersToFeetInchesString(this float meters)
+		public static string MetersToFeetInchesString(this float meters, int dimensions = 1)
 		{
-			float feetDecimal = meters.MetersToFeet();
+			float feetDecimal = meters.MetersToFeet(dimensions);
 			int feetInt = Mathf.FloorToInt(feetDecimal);
-			decimal inchesRemainder =(decimal) (feetDecimal - feetInt) * 12;
+			float inchesRemainder =(feetDecimal - feetInt) *  Mathf.Pow(12, dimensions);
 
-			return $"{feetInt}'-{decimal.Round(inchesRemainder, 2)}\"";
+			if(dimensions == 1)
+				return $"{feetInt}'-{decimal.Round((decimal) inchesRemainder, 2)}\"";
+
+			return $"{feetInt} ft<sup>{dimensions}</sup> - \n" +
+			       $"{decimal.Round((decimal) inchesRemainder, 2)} in<sup>{dimensions}</sup>)";
 		}
 	}
 }
