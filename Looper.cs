@@ -97,8 +97,8 @@ namespace Argyle.UnclesToolkit
 			Name = name;
 			LoopDuration = duration;
 		}
-		
-		
+
+
 		public Looper Add(IterationMethod method)
 		{
 			if(!_iterations.Contains(method))
@@ -127,6 +127,7 @@ namespace Argyle.UnclesToolkit
 
 		#region === Controls ===------------
 
+		
 		public Looper StartLoop()
 		{
 			RunLoop();

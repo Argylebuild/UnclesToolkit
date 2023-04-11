@@ -243,7 +243,7 @@ namespace Argyle.UnclesToolkit
 		{
 			if(inputs.Count < 5)
 			{
-				Debug.LogWarning($"Trying to squash inputs with less than 5 elements. Returning improperly squashed");
+				//Debug.LogWarning($"Trying to squash inputs with less than 5 elements. Returning improperly squashed");
 				return inputs.ToList();
 			}		
 			

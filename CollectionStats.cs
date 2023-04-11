@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace Argyle.UnclesToolkit
 {
@@ -158,5 +160,62 @@ namespace Argyle.UnclesToolkit
 			else
 				throw new IndexOutOfRangeException(outOfRangeMessage);
 		}
+		
+		
+		
+		/// <summary>
+		/// For finding outliers in a dataset with collections of values (e.g. Vector3).
+		/// Convert values to a collection of numbers. 
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="multiplier"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public static Dictionary<float[], T> Outliers<T>(this Dictionary<float[], T> data, float multiplier = 1.5f)
+		{
+			Dictionary<float[], T> allOutliers = new Dictionary<float[], T>();
+			var dataKeys = data.Keys.ToArray();
+
+			if (data.Count >= minQty)
+			{
+
+				//reorganize data into multiple collections for stat analysis
+				SortedList<float, T>[] colPerDim = new SortedList<float, T>[dataKeys[0].Length];
+				for (int i = 0; i < colPerDim.Length; i++)
+					colPerDim[i] = new SortedList<float, T>();
+				
+				foreach (var datum in data)
+				{
+					var dimensions = datum.Key;
+					
+					for (int i = 0; i < dimensions.Length; i++)
+						if(!colPerDim[i].ContainsKey(dimensions[i]))
+							colPerDim[i].Add(dimensions[i], datum.Value);
+				}
+
+				for (int i = 0; i < colPerDim.Length; i++)
+				{
+					var outliers = colPerDim[i].Outliers(multiplier);
+					for (int j = 0; j < colPerDim[i].Count; j++)
+					{
+						if(outliers.ContainsKey(colPerDim[i].Keys[j]))
+						{
+							var outlier = dataKeys[j];
+							
+							if(!allOutliers.ContainsKey(outlier))
+								allOutliers.Add(dataKeys[j], outliers[colPerDim[i].Keys[j]]);
+						}					
+					}
+				}
+			}
+			else
+				throw new IndexOutOfRangeException(outOfRangeMessage);
+			
+			return allOutliers;
+		}
+
+		public static async UniTask<Dictionary<float[], T>> OutliersAsync<T>(
+			this Dictionary<float[], T> data, float multiplier = 1.5f) =>
+			await UniTask.RunOnThreadPool(() => Outliers(data, multiplier));
 	}
 }
