@@ -298,6 +298,26 @@ namespace Argyle.UnclesToolkit
 
 		#endregion -----------------/Collection ====
 
+
+
+		#region ==== Color ====------------------
+
+		public static Vector3 ToVector3(this Color color)
+		{
+			return new Vector3(color.r, color.g, color.b);
+		}
+		
+		public static Color ToColor(this Vector3 vector)
+		{
+			return new Color(vector.x, vector.y, vector.z);
+		}
+
+		#endregion -----------------/Color ====
+		
+		
+		
+		
+		
 	}
 
 }
