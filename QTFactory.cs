@@ -212,6 +212,7 @@ namespace Argyle.UnclesToolkit
 						}
 						else
 						{
+							UniTask.SwitchToMainThread();
 							Stopwatch frameWatch = new Stopwatch();
 
 							_factory._iterationMethod(_factory._queue.Dequeue());

@@ -16,7 +16,7 @@ namespace Argyle.UnclesToolkit
 
         public bool IsAwakeFinished { get; private set; } = false;
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             WaitForPostStart();
             IsAwakeFinished = true;
