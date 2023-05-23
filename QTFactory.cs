@@ -195,8 +195,16 @@ namespace Argyle.UnclesToolkit
 
 			public async void MachineLoop()
 			{
+				if (_factory.IsAsync)
+					UniTask.SwitchToThreadPool();
+				else
+					UniTask.SwitchToMainThread();
+				
+				Stopwatch frameWatch = new Stopwatch();
+
 				while (_factory.IsRunning && Application.isPlaying)
 				{
+					int iterationsPerFrame = 0;
 					if(_toKill)
 					{
 						Debug.Log("Killing the machine loop! ");
@@ -206,26 +214,21 @@ namespace Argyle.UnclesToolkit
 					if(_factory._queue.Count > 0)
 					{
 						if (_factory.IsAsync)
-						{
-							var thing = _factory._queue.Dequeue();
-							await _factory._iterationMethodAsync(thing);
-						}
+							await _factory._iterationMethodAsync(_factory._queue.Dequeue());
 						else
-						{
-							UniTask.SwitchToMainThread();
-							Stopwatch frameWatch = new Stopwatch();
-
 							_factory._iterationMethod(_factory._queue.Dequeue());
-
-							if (frameWatch.LapSoFar() > 1 / Timing.Instance.MinFramerate)
-							{
-								frameWatch.Lap();
-								await UniTask.NextFrame();
-							}
+							
+						if (frameWatch.LapSoFar() > 1 / Timing.Instance.MinFramerate)
+						{
+							Debug.Log($"Iterations per frame: {iterationsPerFrame}");
+							await UniTask.NextFrame();
+							frameWatch.Lap();
 						}
 					}
-
-					await UniTask.NextFrame();
+					else
+					{
+						await UniTask.NextFrame();
+					}
 				}
 			}
 			
