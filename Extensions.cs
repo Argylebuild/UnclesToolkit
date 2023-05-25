@@ -303,13 +303,13 @@ namespace Argyle.UnclesToolkit
 
 		#region ==== Color ====------------------
 
-		public static Vector3 ToVector3(this Color color) => new(color.r, color.g, color.b);
+		public static Vector3 ToVector3(this Color color) => new Vector3(color.r, color.g, color.b);
 
-		public static Color ToColor(this Vector3 vector) => new(vector.x, vector.y, vector.z);
+		public static Color ToColor(this Vector3 vector) => new Color(vector.x, vector.y, vector.z);
 
-		public static Vector4 ToVector4(this Color color) => new(color.r, color.g, color.b, color.a);
+		public static Vector4 ToVector4(this Color color) => new Color(color.r, color.g, color.b, color.a);
 		
-		public static Color ToColor(this Vector4 vector) => new(vector.x, vector.y, vector.z, vector.w);
+		public static Color ToColor(this Vector4 vector) => new Color(vector.x, vector.y, vector.z, vector.w);
 		
 
 		/// <summary>
