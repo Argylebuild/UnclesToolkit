@@ -28,6 +28,7 @@ namespace Argyle.UnclesToolkit
 
 		private QtMachine[] _machines;
 		private readonly int _machineQty;
+		private int _maxIterations = Int32.MaxValue;
 		
 		public bool IsRunning { get; private set; } = false;
 		public bool IsAsync { get; }
@@ -42,11 +43,14 @@ namespace Argyle.UnclesToolkit
 		/// Constructor for main thread operations (E.G. monobehavior operations)
 		/// </summary>
 		/// <param name="iterationMethod">The stuff you do to it. </param>
-		public QtFactory(IterationMethod iterationMethod, int machinesQty)
+		/// <param name="machinesQty"></param>
+		/// <param name="maxIterations"></param>
+		public QtFactory(IterationMethod iterationMethod, int machinesQty, int maxIterations = Int32.MaxValue)
 		{
 			_iterationMethod = iterationMethod;
 			IsAsync = false;
 			_machineQty = machinesQty;
+			_maxIterations = maxIterations;
 			SetupMachines();
 		}
 
@@ -55,11 +59,13 @@ namespace Argyle.UnclesToolkit
 		/// </summary>
 		/// <param name="iterationMethodAsync">The stuff you do to it. </param>
 		/// <param name="machinesQty">How many parallel machines will run this async method?</param>
-		public QtFactory(IterationMethodAsync iterationMethodAsync, int machinesQty)
+		/// <param name="maxIterations"></param>
+		public QtFactory(IterationMethodAsync iterationMethodAsync, int machinesQty, int maxIterations = Int32.MaxValue)
 		{
 			_iterationMethodAsync = iterationMethodAsync;
 			IsAsync = true;
 			_machineQty = machinesQty;
+			_maxIterations = maxIterations;
 			SetupMachines();
 		}
 
@@ -195,22 +201,23 @@ namespace Argyle.UnclesToolkit
 
 			public async void MachineLoop()
 			{
-				if (_factory.IsAsync)
-					UniTask.SwitchToThreadPool();
-				else
-					UniTask.SwitchToMainThread();
+				// if (_factory.IsAsync)
+				// 	UniTask.SwitchToThreadPool();
+				// else
+				// 	UniTask.SwitchToMainThread();
 				
 				Stopwatch frameWatch = new Stopwatch();
 
+				int iterationsPerFrame = 0;
 				while (_factory.IsRunning && Application.isPlaying)
 				{
-					int iterationsPerFrame = 0;
 					if(_toKill)
 					{
 						Debug.Log("Killing the machine loop! ");
 						_toKill = false;
 						continue;
 					}
+
 					if(_factory._queue.Count > 0)
 					{
 						if (_factory.IsAsync)
@@ -218,9 +225,13 @@ namespace Argyle.UnclesToolkit
 						else
 							_factory._iterationMethod(_factory._queue.Dequeue());
 							
-						if (frameWatch.LapSoFar() > 1 / Timing.Instance.MinFramerate)
+						iterationsPerFrame++;
+						if (frameWatch.LapSoFar() > 1 / Timing.Instance.MinFramerate ||
+						    iterationsPerFrame > _factory._maxIterations || 
+						    System.GC.GetTotalMemory(false) > 4000000000)
 						{
 							Debug.Log($"Iterations per frame: {iterationsPerFrame}");
+							iterationsPerFrame = 0;
 							await UniTask.NextFrame();
 							frameWatch.Lap();
 						}
