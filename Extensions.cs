@@ -116,7 +116,7 @@ namespace Argyle.UnclesToolkit
 			//control for unexpected values
 			if (newSampleSize < 1)
 			{
-				Debug.Log("Sample is too small to calculate an average.");
+				//Debug.Log("Sample is too small to calculate an average.");
 				return 0;
 			}
 			else if (newSampleSize == 1)

@@ -213,7 +213,7 @@ namespace Argyle.UnclesToolkit
 				{
 					if(_toKill)
 					{
-						Debug.Log("Killing the machine loop! ");
+						//Debug.Log("Killing the machine loop! ");
 						_toKill = false;
 						continue;
 					}
@@ -227,10 +227,9 @@ namespace Argyle.UnclesToolkit
 							
 						iterationsPerFrame++;
 						if (frameWatch.LapSoFar() > 1 / Timing.Instance.MinFramerate ||
-						    iterationsPerFrame > _factory._maxIterations || 
-						    System.GC.GetTotalMemory(false) > 4000000000)
+						    iterationsPerFrame > _factory._maxIterations)
 						{
-							Debug.Log($"Iterations per frame: {iterationsPerFrame}");
+							//Debug.Log($"Iterations per frame: {iterationsPerFrame}");
 							iterationsPerFrame = 0;
 							await UniTask.NextFrame();
 							frameWatch.Lap();
