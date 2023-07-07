@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using API.Utility;
@@ -193,13 +194,26 @@ namespace Argyle.UnclesToolkit
 
         private string Prefixed(string message, List<string> tags)
         {
-            var t = GetType();
-            string prefixed = $"Argyle {t.Namespace}.{t.Name}: {message}";
+            StringBuilder prefixed = new StringBuilder();
+            prefixed.Append(Namespace);
+            prefixed.Append(".");
+            prefixed.Append(ClassName);
+            prefixed.Append(": ");
+            prefixed.Append(message);
+
             if(tags != null)
+            {
                 foreach (var tag in tags)
-                    prefixed += $", {tag}";
-            return prefixed;
+                {
+                    prefixed.Append(", ");
+                    prefixed.Append(tag);
+                }
+            }
+            return prefixed.ToString();
         }
+        
+        protected string Namespace = "Argyle";
+        protected string ClassName => "ArgyleComponent";
 
         #endregion -----------------/Logging ====
 

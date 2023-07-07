@@ -11,7 +11,8 @@ namespace Argyle.UnclesToolkit
     {
         public Transform _targetTransform;
         public ObjectReferenceMarker _targeReference;
-        
+        public float distanceThreshold = 0f;
+        public float rotationThreshold = 0f;
         
         public Transform Target
         {
@@ -35,11 +36,14 @@ namespace Argyle.UnclesToolkit
         {
             if(Target != null)
             {
-                if(_matchRotation)
+                if(_matchRotation && Quaternion.Angle(TForm.rotation, Target.rotation) > rotationThreshold)
                     TForm.rotation = Target.rotation;// should animate this later. Add Transform.AnimateRotate extension.
+                
                 Vector3 targetPosition = _useLocal ? TForm.parent.InverseTransformPoint(Target.position) : Target.position;
-                TForm.AnimateTranslateTo(targetPosition, _animationTime, _useLocal);
-                if(_matchRotation)
+                if(Vector3.Distance(TForm.position, targetPosition) > distanceThreshold)
+                    await TForm.AnimateTranslateTo(targetPosition, _animationTime, _useLocal);
+                
+                if(_matchRotation && Quaternion.Angle(TForm.rotation, Target.rotation) > rotationThreshold)
                     TForm.rotation = Target.rotation;// should animate this later. Add Transform.AnimateRotate extension.
             }        
             

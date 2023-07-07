@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace Argyle.UnclesToolkit
 {
@@ -12,9 +13,10 @@ namespace Argyle.UnclesToolkit
 	{
 		public bool Busy { private set; get; }
 
-		public async Task CheckOut()
+		public async UniTask CheckOut()
 		{
-			await WaitForReady();
+			if(Busy)
+				await WaitForReady();
 			Busy = true;
 		}
 
@@ -22,21 +24,23 @@ namespace Argyle.UnclesToolkit
 
 
 
-		public async Task WaitForReady()
+		public async UniTask WaitForReady()
 		{
 			while (Busy)
-				await Task.Delay(10);
+				await UniTask.Delay(10);
 		}
 
-		public async Task SafeAdd(T item)
+		public async void SafeAdd(T item)
 		{
-			await WaitForReady();
+			if(Busy)
+				await WaitForReady();
 			Add(item);
 		}
 
-		public async Task SafeRemove(T item)
+		public async void SafeRemove(T item)
 		{
-			await WaitForReady();
+			if(Busy)
+				await WaitForReady();
 			Remove(item);
 		}
 	}
