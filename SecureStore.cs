@@ -262,7 +262,9 @@ namespace Argyle.UnclesToolkit
 			}
 			catch (Exception e)
 			{
-				DialogueManager.ErrorDialogue.Show($"Unable to deserialize {fileName} to {typeof(T)} \n {e.Message} \n {e.Source} \n {e.Data} \n {e.StackTrace}");
+				if (File.Exists(FullPath(fileName)))
+					File.Delete(FullPath(fileName));
+				//DialogueManager.ErrorDialogue.Show($"Unable to deserialize {fileName} to {typeof(T)} \n {e.Message} \n {e.Source} \n {e.Data} \n {e.StackTrace}");
 			}
 			
 			//if not there or empty
