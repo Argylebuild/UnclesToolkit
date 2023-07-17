@@ -26,11 +26,11 @@ namespace Argyle.UnclesToolkit
 				sorted.Add(number, number.ToString());
 
 			sortedNumbers = sorted.Keys.ToList();
-			Debug.Log($"Min is {sorted.Min().Key}.");
-			Debug.Log($"Q1 is {sorted.Q1().Key}.");
-			Debug.Log($"Med is {sorted.Med().Key}.");
-			Debug.Log($"Q3 is {sorted.Q3().Key}.");
-			Debug.Log($"Max is {sorted.Max().Key}.");
+			// Debug.Log($"Min is {sorted.Min().Key}.");
+			// Debug.Log($"Q1 is {sorted.Q1().Key}.");
+			// Debug.Log($"Med is {sorted.Med().Key}.");
+			// Debug.Log($"Q3 is {sorted.Q3().Key}.");
+			// Debug.Log($"Max is {sorted.Max().Key}.");
 		}
 
 		[Button]

@@ -9,6 +9,8 @@ namespace Argyle.UnclesToolkit
 		public float MinFramerate = 20;
 		public float MaxFramerate = 90;
 
+		
+		
 		float frameStartTime;
 
 		// Use this for initialization
@@ -53,8 +55,7 @@ namespace Argyle.UnclesToolkit
 				calcLoopStart = Time.realtimeSinceStartup;
 			}
 		}
-		
-		
+
 	
 		// public float GetTimeSinceFrameStart()
 		// {
@@ -78,7 +79,7 @@ namespace Argyle.UnclesToolkit
 			if (Time.deltaTime > 1/MinFramerate)
 			{
 				framerateThrottleCount++;
-				Debug.Log("MAINTAIN FRAMERATE (see stack trace");
+				//Debug.Log("MAINTAIN FRAMERATE (see stack trace");
 				await UniTask.NextFrame();
 			}
 			else

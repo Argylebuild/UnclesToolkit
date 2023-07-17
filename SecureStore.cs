@@ -206,9 +206,13 @@ namespace Argyle.UnclesToolkit
 		/// </summary>
 		/// <param name="thing"></param>
 		/// <param name="fileName"></param>
-		public async UniTask StoreAppendAsync(string thing, string fileName) => 
-			await File.AppendAllTextAsync(FullPath(fileName), thing);
-		
+		public async UniTask StoreAppendAsync(string thing, string fileName)
+		{
+			using (var streamWriter = new StreamWriter(FullPath(fileName), append: true))
+			{
+				await streamWriter.WriteLineAsync(thing);
+			}
+		}		
 
 		#endregion -----------------/Store ====
 
@@ -250,9 +254,18 @@ namespace Argyle.UnclesToolkit
 
 		public T Retrieve<T>(string fileName) where T : class
 		{
-			var results = Retrieve(fileName);
-			if(results != null)
-				return JsonConvert.DeserializeObject<T>(results, deserializeSettings);
+			try
+			{
+				var results = Retrieve(fileName);
+				if(results != null)
+					return JsonConvert.DeserializeObject<T>(results, deserializeSettings);
+			}
+			catch (Exception e)
+			{
+				if (File.Exists(FullPath(fileName)))
+					File.Delete(FullPath(fileName));
+				//DialogueManager.ErrorDialogue.Show($"Unable to deserialize {fileName} to {typeof(T)} \n {e.Message} \n {e.Source} \n {e.Data} \n {e.StackTrace}");
+			}
 			
 			//if not there or empty
 			return null;

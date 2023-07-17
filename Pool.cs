@@ -43,7 +43,7 @@ namespace Argyle.UnclesToolkit
 			}
 
 			Preload = new List<GameObject>();
-			Debug.Log($"Instantiated {MinSize} pool objects in {sw.TotalSoFar()} seconds");
+			//Debug.Log($"Instantiated {MinSize} pool objects in {sw.TotalSoFar()} seconds");
 		}
 
 		#endregion -----------------/CTOR, Setup ====
