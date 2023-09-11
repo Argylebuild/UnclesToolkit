@@ -277,7 +277,7 @@ namespace Argyle.UnclesToolkit
 				return File.ReadAllText(FullPath(fileName));
 			
 			//else
-			Debug.LogWarning($"{FullPath(fileName)} not found in filestructure. Returning null");
+			//Debug.LogWarning($"{FullPath(fileName)} not found in filestructure. Returning null");
 			return null;
 		}
 
