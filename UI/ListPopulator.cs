@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Argyle.UnclesToolkit;
+﻿using Argyle.UnclesToolkit;
+using Cysharp.Threading.Tasks;
 using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 
@@ -15,9 +15,9 @@ namespace Argyle.Utilities.UI
         private void Awake() => Initialize();
 
         // Virtual Methods (Task return types cannot be abstract)
-        protected virtual async Task MakeListAsync() { }   // Override to create a list
-        protected virtual async Task ClearListAsync() { }  // Override to reset the list
-        protected virtual async Task RefreshListAsync()
+        protected virtual async UniTask MakeListAsync() { }   // Override to create a list
+        protected virtual async UniTask ClearListAsync() { }  // Override to reset the list
+        protected virtual async UniTask RefreshListAsync()
         { 
             await ClearListAsync();
             await MakeListAsync();
