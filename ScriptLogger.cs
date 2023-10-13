@@ -169,7 +169,7 @@ namespace Argyle.UnclesToolkit
 		#endregion -----------------/Controls ====
 
 		[Button]
-		public void Ping() => Log("Ping", new List<string>(){"Test"});
+		public void Ping() => Debug.Log("Ping");
 	}
 
 }
