@@ -68,9 +68,8 @@ namespace Argyle.UnclesToolkit
         }
         
         
-        protected new void Awake()
+        protected void Awake()
         {
-            base.Awake();
             Setup();
         }
 

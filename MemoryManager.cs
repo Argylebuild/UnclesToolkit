@@ -24,10 +24,9 @@ namespace Argyle.UnclesToolkit
 
 		#region ==== Monobehavior ====------------------
 
-		protected override void PostStart()
+		protected void Start()
 		{
 			Application.lowMemory += UnityLowMemoryHandler;
-			base.PostStart();
 		}
 
 		public float MemoryCheckFrequency = 5f;
