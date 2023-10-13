@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using API.Utility;
-using Cysharp.Threading.Tasks;
-using EasyButtons;
 using UnityEngine;
 
 namespace Argyle.UnclesToolkit
@@ -14,56 +9,13 @@ namespace Argyle.UnclesToolkit
     {
         private bool _isReferenceSet = false;
         private Transform _tForm;
-
-        public bool IsAwakeFinished { get; private set; } = false;
-
-        protected virtual void Awake()
-        {
-            WaitForPostStart();
-            IsAwakeFinished = true;
-        }
-
-        /// <summary>
-        /// If any functionality is waiting for start to be finished, make sure you call base.Start() last.
-        /// </summary>
-        protected virtual void Start()
-        {
-            IsStartFinished = true;
-        }
+        
 
         protected void OnDestroy()
         {
             CancelObject();
         }
-
-
-        protected UniTask WaitUntilAwakeIsFinishedAsync() => Timing.WaitFor(() => IsAwakeFinished);
-
-
-        /// <summary>
-        /// If using, make sure to call base.Start() last in any child classes. 
-        /// </summary>
-        public bool IsStartFinished { get; private set; } = false;
-
-
-        /// <summary>
-        /// If using, make sure to call base.Start() last in any child classes. 
-        /// </summary>
-        public UniTask WaitUntilStartIsFinishedAsync() => Timing.WaitFor(() => IsStartFinished);
-
-
-        private async void WaitForPostStart()
-        {
-            await UniTask.NextFrame();
-            PostStart();
-        }
         
-        /// <summary>
-        /// Runs after first frame (so after awake, onEnable, and start) for functions that rely on established setup.
-        /// </summary>
-        protected virtual async void PostStart()
-        {
-        }
 
         /// <summary>
         /// Pre-populated transform reference for improved performance.
@@ -149,102 +101,11 @@ namespace Argyle.UnclesToolkit
         
         
         
-        
-        #region ==== Logging ====------------------
-
-        /// <summary>
-        /// Log to the Unity Debugger and the Console along with info about caller and type.
-        /// Helps search for specific logs and groups of logs.
-        /// </summary>
-        /// <param name="message">Primary message. Can directly replace the existing Debug.Log() message</param>
-        /// <param name="tags">An optional list of tags to help narrow logs. </param>
-        public void Log(string message, List<string> tags = null)
-        {
-            string log = Prefixed(message, tags);
-            Debug.Log(log);
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine(log);
-        }
-
-        protected void LogWarning(string message, List<string> tags = null)
-        {
-            string log = $"WARNING - {Prefixed(message, tags)}";
-            Debug.LogWarning(log);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(log);
-        }
-
-        protected void LogError(string message, List<string> tags = null)
-        {
-            string log = $"ERROR - {Prefixed(message, tags)}";
-            Debug.LogError(log);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(log);
-        }
-
-        protected void LogException(string message, List<string> tags = null)
-        {
-            string log = $"EXCEPTION - {Prefixed(message, tags)}";
-            LogException(log);
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.WriteLine(log);
-        }
-
-        public void LogException(Exception e) => LogException(e.Message);
-
-        private string Prefixed(string message, List<string> tags)
-        {
-            StringBuilder prefixed = new StringBuilder();
-            prefixed.Append(Namespace);
-            prefixed.Append(".");
-            prefixed.Append(ClassName);
-            prefixed.Append(": ");
-            prefixed.Append(message);
-
-            if(tags != null)
-            {
-                foreach (var tag in tags)
-                {
-                    prefixed.Append(", ");
-                    prefixed.Append(tag);
-                }
-            }
-            return prefixed.ToString();
-        }
-        
-        protected string Namespace = "Argyle";
-        protected string ClassName => "ArgyleComponent";
-
-        #endregion -----------------/Logging ====
-
-        
-        
-        
         #region ==== Cancellation ====-----------------
-
-        // private static HashSet<CancellationTokenSource> CancelClassSources = new HashSet<CancellationTokenSource>();
 
         private HashSet<CancellationTokenSource> CancelObjectSources = new HashSet<CancellationTokenSource>();
         
-
-        // /// <summary>
-        // /// Cancel async functions added to this class (inherited classes).
-        // /// </summary>
-        // public static void CancelClass()
-        // {
-        //     foreach (var source in CancelClassSources)
-        //     {
-        //         source.Cancel();
-        //     }
-        // }
-        //
-        // public static CancellationToken AddCancelToClass()
-        // {
-        //     CancellationTokenSource source = new CancellationTokenSource();
-        //     CancelClassSources.Add(source);
-        //
-        //     return source.Token;
-        // }
+        
 
         /// <summary>
         /// Cancel async functions for this particular object (instance).
@@ -268,14 +129,6 @@ namespace Argyle.UnclesToolkit
 
         protected void ReleaseCancel(CancellationToken token)
         {
-            // foreach (var source in CancelClassSources)
-            // {
-            //     if (source.Token == token)
-            //     {
-            //         CancelClassSources.Remove(source);
-            //         return;
-            //     }
-            // }
             foreach (var source in CancelObjectSources)
             {
                 if (source.Token == token)
@@ -284,9 +137,7 @@ namespace Argyle.UnclesToolkit
                     return;
                 }
             }
-
         }
-
 
 
         #endregion ------------------/Cancellation ====

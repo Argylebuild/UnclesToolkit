@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Argyle.UnclesToolkit;
 using Cysharp.Threading.Tasks;
 using EasyButtons;
@@ -21,7 +18,7 @@ public class LatticeThingTest : ArgyleComponent
 			rend = GetComponent<MeshRenderer>();
 
 		rend.material.color = HighlightColor;
-		await Task.Delay(2000);
+		await UniTask.Delay(2000);
 		rend.material.color = baseColor;
 	}
 	
