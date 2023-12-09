@@ -38,6 +38,8 @@ namespace Argyle.UnclesToolkit.Geometry
             return new TransformData(tForm);
         }
 
+        #region ==== Animate ====------------------
+
         /// <summary>
         /// Translates an object a given vector over a given time in local space
         /// </summary>
@@ -108,7 +110,7 @@ namespace Argyle.UnclesToolkit.Geometry
         public async static UniTask AnimateScaleTo(this Transform tform, Vector3 factor, float duration)
         {
             Vector3 startScale;
-                startScale = tform.localScale;
+            startScale = tform.localScale;
             
             float portionComplete = 0;
             
@@ -125,6 +127,45 @@ namespace Argyle.UnclesToolkit.Geometry
             tform.localScale = factor;
 
         }
+        
+        
+        public async static UniTask AnimateRotate(this Transform tform, Vector3 rotation, float duration, bool isLocal = true)
+        {
+            Quaternion startRotation = isLocal ? tform.localRotation : tform.rotation;
+            Quaternion endRotation = Quaternion.Euler(rotation) * startRotation;
+
+            await tform.AnimateRotateTo(endRotation, duration, isLocal);
+        }
+
+        public async static UniTask AnimateRotateTo(this Transform tform, Quaternion endRotation, float duration, bool isLocal = true)
+        {
+            Quaternion startRotation = isLocal ? tform.localRotation : tform.rotation;
+            float portionComplete = 0;
+
+            while (portionComplete <= 1)
+            {
+                if(tform == null)
+                    return;
+
+                Quaternion currentRotation = Quaternion.Lerp(startRotation, endRotation, portionComplete);
+                if (isLocal)
+                    tform.localRotation = currentRotation;
+                else
+                    tform.rotation = currentRotation;
+
+                portionComplete += Time.deltaTime / duration;
+                await UniTask.Yield(PlayerLoopTiming.Update);
+            }
+
+            // Finalize
+            if (isLocal)
+                tform.localRotation = endRotation;
+            else
+                tform.rotation = endRotation;
+        }
+
+        #endregion -----------------/Animate ====
+
 
         /// <summary>
         /// Creates a snapshot of the source coordinate system for making transformations. 
