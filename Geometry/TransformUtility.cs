@@ -181,5 +181,27 @@ namespace Argyle.UnclesToolkit.Geometry
 
             return copy;
         }
+        
+        /// <summary>
+        /// Returns the simple pose of the referenced transform
+        /// </summary>
+        /// <param name="tForm"></param>
+        /// <returns></returns>
+        public static Pose GetPose(this Transform tForm)
+        {
+            return new Pose(tForm.position, tForm.rotation);
+        }
+        
+        /// <summary>
+        /// Sets the position and rotation of the transform by the given pose data.
+        /// </summary>
+        /// <param name="tForm"></param>
+        /// <param name="pose"></param>
+        public static void SetPose(this Transform tForm, Pose pose)
+        {
+            tForm.position = pose.position;
+            tForm.rotation = pose.rotation;
+        }
+        
     }
 }
