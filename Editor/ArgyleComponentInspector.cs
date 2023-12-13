@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Argyle.UnclesToolkit.Editor
 {
-	[CustomEditor(typeof(ArgyleComponent))]
+	[CustomEditor(typeof(ArgyleComponent), true)]
 	public class ArgyleComponentEditor : UnityEditor.Editor {
-		bool _showFoldout = true;
+		bool _showFoldout = false;
 		SerializedProperty _usageNotesProp;
 
 		void OnEnable() {
