@@ -7,6 +7,8 @@ namespace Argyle.UnclesToolkit
 {
     public class ArgyleComponent : MonoBehaviour
     {
+        public string _usageNotes;
+        
         private bool _isReferenceSet = false;
         private Transform _tForm;
         

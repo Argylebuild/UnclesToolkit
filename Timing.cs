@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -26,8 +28,25 @@ namespace Argyle.UnclesToolkit
 		void Update()
 		{
 			frameStartTime = Time.realtimeSinceStartup;
+
+			while (MainThreadQueue.Count > 0)
+			{
+				MainThreadQueue.Dequeue().Invoke();
+			}
 		}
 
+		#region ==== Action Queue ====------------------
+
+		public Queue<Action> MainThreadQueue = new Queue<Action>();
+		
+		public void QueueMainThreadAction(Action action)
+		{
+			MainThreadQueue.Enqueue(action);
+		}
+
+		#endregion -----------------/Action Queue ====
+		
+		
 		/// <summary>
 		/// Frames per second. Recalculated once per second. Usable in dynamic performance adjustment.
 		/// </summary>

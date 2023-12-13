@@ -1,4 +1,5 @@
 using Argyle.UnclesToolkit.Geometry;
+using Cysharp.Threading.Tasks;
 using EasyButtons;
 using UnityEngine;
 
@@ -29,25 +30,27 @@ namespace Argyle.UnclesToolkit
         public bool _useLocal;
         public bool _matchRotation = true;
 
-        
-        
+
+
         [Button]
         public async void GetOverHere()
         {
-            if(Target != null)
+            await UniTask.NextFrame(); //attempting to fix failure
+            if (Target != null)
             {
-                if(_matchRotation && Quaternion.Angle(TForm.rotation, Target.rotation) > rotationThreshold)
-                    TForm.rotation = Target.rotation;// should animate this later. Add Transform.AnimateRotate extension.
-                
-                Vector3 targetPosition = _useLocal ? TForm.parent.InverseTransformPoint(Target.position) : Target.position;
-                if(Vector3.Distance(TForm.position, targetPosition) > distanceThreshold)
+                if (_matchRotation && Quaternion.Angle(TForm.rotation, Target.rotation) > rotationThreshold)
+                    TForm.rotation =
+                        Target.rotation; // should animate this later. Add Transform.AnimateRotate extension.
+
+                Vector3 targetPosition =
+                    _useLocal ? TForm.parent.InverseTransformPoint(Target.position) : Target.position;
+                if (Vector3.Distance(TForm.position, targetPosition) > distanceThreshold)
                     await TForm.AnimateTranslateTo(targetPosition, _animationTime, _useLocal);
-                
-                if(_matchRotation && Quaternion.Angle(TForm.rotation, Target.rotation) > rotationThreshold)
-                    TForm.rotation = Target.rotation;// should animate this later. Add Transform.AnimateRotate extension.
-            }        
-            
-            
+
+                if (_matchRotation && Quaternion.Angle(TForm.rotation, Target.rotation) > rotationThreshold)
+                    TForm.rotation =
+                        Target.rotation; // should animate this later. Add Transform.AnimateRotate extension.
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Argyle.UnclesToolkit
+namespace Argyle.UnclesToolkit.Control
 {
     public class WASD : MonoBehaviour
     {

@@ -44,25 +44,30 @@ namespace Argyle.UnclesToolkit
 
 		private void CheckMemoryUsage()
 		{
+			//.Log($"MEMORY MANAGER: Checking memory usage at {Time.realtimeSinceStartup} seconds. Memory used: {MemoryUsed / GB} GB");
 			MemoryUsed = GC.GetTotalMemory(false);
 			MemoryLimitUsed = MemoryUsed / (float)MemoryLimit;
 
 			_lastCheckTime = Time.realtimeSinceStartup;
 			if (MemoryUsed > MemoryLimit)
 			{
+				//Debug.Log($"MEMORY MANAGER: Memory limit reached at {Time.realtimeSinceStartup} seconds. Memory used: {MemoryUsed / GB} GB");
 				OnMemoryLimitReached.Invoke();
 			}
+			//Debug.Log($"MEMORY MANAGER: Finished checking memory usage at {Time.realtimeSinceStartup} seconds. Memory used: {MemoryUsed / GB} GB");
 		}
 
 		public void UnityLowMemoryHandler()
 		{
-			Debug.Log($"Unloading unused assets at {Time.realtimeSinceStartup} seconds. Memory used: {MemoryUsed / GB} GB");
+			//Debug.Log($"Unloading unused assets at {Time.realtimeSinceStartup} seconds. Memory used: {MemoryUsed / GB} GB");
 			Resources.UnloadUnusedAssets();
-			Debug.Log($"Finished Unloading unused assets at {Time.realtimeSinceStartup} seconds. Memory used: {MemoryUsed / GB} GB");
+			//Debug.Log($"Finished Unloading unused assets at {Time.realtimeSinceStartup} seconds. Memory used: {MemoryUsed / GB} GB");
 			OnUnityLowMemory.Invoke();
+			
+			ReportOnMemoryCleanup();
 		}
 
-		private async void ReportOnMemoryCleanup()
+		private async UniTaskVoid ReportOnMemoryCleanup()
 		{
 			await UniTask.NextFrame();
 			Debug.Log($"Frame after Unloading unused assets at {Time.realtimeSinceStartup} seconds. Memory used: {MemoryUsed / GB} GB");
