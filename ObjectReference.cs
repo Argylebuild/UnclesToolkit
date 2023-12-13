@@ -47,14 +47,27 @@ namespace Argyle.UnclesToolkit
 					var original = referenceDic[objectReference.marker];//for debug
 					var duplicate = objectReference;
 					Debug.LogWarning($"Duplicate markers found for {objectReference.marker.name}. \n" +
-					                 $"Original on object: {original.GO.name}. \n" +
-					                 $"Duplicate on object: {duplicate.GO.name}");
+					                 $"Original on object: {GetHierarchy(original)}. \n" +
+					                 $"Duplicate on object: {GetHierarchy(duplicate)}");
 					
 					//Destroy(objectReference); //for that weird camera copy thing. 
 				}				
 				else
 					referenceDic.Add(objectReference.marker, objectReference);
 			}
+		}
+
+		private static string GetHierarchy(ObjectReference reference)
+		{
+			string hierarchy = reference.GO.name;
+			var parent = reference.GO.transform.parent;
+			while (parent != null)
+			{
+				hierarchy = parent.name + "/" + hierarchy;
+				parent = parent.parent;
+			}
+
+			return hierarchy;
 		}
 	}
 }
