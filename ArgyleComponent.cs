@@ -7,6 +7,7 @@ namespace Argyle.UnclesToolkit
 {
     public class ArgyleComponent : MonoBehaviour
     {
+        [TextArea]
         public string _usageNotes;
         
         private bool _isReferenceSet = false;
