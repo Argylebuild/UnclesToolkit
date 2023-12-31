@@ -221,9 +221,9 @@ namespace Argyle.UnclesToolkit
 			{
 				if(Time.realtimeSinceStartup > startTime + TimeOut)
 				{
-					Debug.LogWarning($"Failed to properly stop {Name} loop. Quit after {TimeOut} seconds. " +
-					                 $"May cause duplicate looping. \n " +
-					                 $"Loop stopped at loop {cycleNumber} in method {currentMethod}.");
+					// Debug.LogWarning($"Failed to properly stop {Name} loop. Quit after {TimeOut} seconds. " +
+					//                  $"May cause duplicate looping. \n " +
+					//                  $"Loop stopped at loop {cycleNumber} in method {currentMethod}.");
 					break;
 				}				
 				
