@@ -50,8 +50,7 @@ namespace Argyle.UnclesToolkit
 		/// <summary>
 		/// Frames per second. Recalculated once per second. Usable in dynamic performance adjustment.
 		/// </summary>
-		public float Fps => fps;
-		private float fps = 20;
+		public float Fps { get; private set; } = 20;
 
 		private async UniTaskVoid CalculateFps()
 		{
@@ -68,7 +67,7 @@ namespace Argyle.UnclesToolkit
 					await UniTask.NextFrame();
 				}
 		
-				fps = framesSinceCalc;
+				Fps = framesSinceCalc;
 				timeSinceCalc = 0;
 				framesSinceCalc = 0;
 				calcLoopStart = Time.realtimeSinceStartup;
