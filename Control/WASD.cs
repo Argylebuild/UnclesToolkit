@@ -7,8 +7,8 @@ namespace Argyle.UnclesToolkit.Control
         [Tooltip("Rotation speed multiplier. 1 is default.")]
         public float rotationSpeed = 1;
         public float transformSpeed = 1;
-        public float mouseSpeed = 4;
-        public bool useMouseRotation = true;
+        public float mouseSpeed = 1;
+        public bool useMouseRotation = false;
 
         float modTransformSpeed;
 
