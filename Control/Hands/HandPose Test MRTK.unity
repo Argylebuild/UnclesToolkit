@@ -1026,6 +1026,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1342416864167480994, guid: e16ba0b358bb5654592ed93a479c5fbb, type: 3}
+      propertyPath: _pinchDistanceThreshold
+      value: 0.08
+      objectReference: {fileID: 0}
     - target: {fileID: 6619895272450658205, guid: e16ba0b358bb5654592ed93a479c5fbb, type: 3}
       propertyPath: matchTarget
       value: 

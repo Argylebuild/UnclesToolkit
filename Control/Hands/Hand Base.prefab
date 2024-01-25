@@ -493,6 +493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8512166070161260757}
   - component: {fileID: 7835306267994684108}
+  - component: {fileID: 8518114439147292574}
   m_Layer: 0
   m_Name: Hand Base
   m_TagString: Untagged
@@ -745,6 +746,20 @@ MonoBehaviour:
   isBird: 0
   isThumbsUp: 0
   isThumbsDown: 0
+--- !u!114 &8518114439147292574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1877694207971164752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4af734a295744523b41931dd57d2c00e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _usageNotes: 
+  handedness: 1
 --- !u!1 &3236657553572313861
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,6 +1020,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _usageNotes: 
   jointType: 1
+  handJoint: 1
   handedness: 0
 --- !u!1 &7360085456345214019
 GameObject:
@@ -1102,6 +1118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _usageNotes: 
   jointType: 2
+  handJoint: 0
   handedness: 0
 --- !u!1 &8026881142951045926
 GameObject:
@@ -1544,6 +1561,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: handedness
       value: 0
       objectReference: {fileID: 0}
@@ -1575,6 +1596,10 @@ PrefabInstance:
     - target: {fileID: 592534367060990378, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: m_Name
       value: Ring
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048715302232981447, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5048715302232981447, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: jointType
@@ -1629,6 +1654,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: jointType
       value: 18
       objectReference: {fileID: 0}
@@ -1638,6 +1667,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+--- !u!4 &9213926664313047181 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5715788684619014881, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+  m_PrefabInstance: {fileID: 3498451376244583020}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2110522005726949599 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3298581512461949619, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
@@ -1649,11 +1683,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ee4a483f2674a82b5f1e1fab2c4e37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &9213926664313047181 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5715788684619014881, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
-  m_PrefabInstance: {fileID: 3498451376244583020}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4241680954927901174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1664,6 +1693,10 @@ PrefabInstance:
     - target: {fileID: 592534367060990378, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: m_Name
       value: Pinky
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048715302232981447, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 5048715302232981447, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: jointType
@@ -1718,6 +1751,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: jointType
       value: 23
       objectReference: {fileID: 0}
@@ -1753,6 +1790,10 @@ PrefabInstance:
     - target: {fileID: 592534367060990378, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: m_Name
       value: Thumb
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048715302232981447, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5048715302232981447, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: jointType
@@ -1807,6 +1848,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: jointType
       value: 4
       objectReference: {fileID: 0}
@@ -1816,6 +1861,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+--- !u!4 &87716212400382374 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5715788684619014881, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+  m_PrefabInstance: {fileID: 5648972883129729863}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7179798288956398068 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3298581512461949619, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
@@ -1827,11 +1877,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ee4a483f2674a82b5f1e1fab2c4e37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &87716212400382374 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5715788684619014881, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
-  m_PrefabInstance: {fileID: 5648972883129729863}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5793773979033507682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1842,6 +1887,10 @@ PrefabInstance:
     - target: {fileID: 592534367060990378, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: m_Name
       value: Middle
+      objectReference: {fileID: 0}
+    - target: {fileID: 5048715302232981447, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5048715302232981447, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: jointType
@@ -1894,6 +1943,10 @@ PrefabInstance:
     - target: {fileID: 5715788684619014881, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
+      propertyPath: handJoint
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8817612995458492994, guid: 93f476daab41f06448126b5c7a01f872, type: 3}
       propertyPath: jointType
