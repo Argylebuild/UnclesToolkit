@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.MixedReality.Toolkit;
 using UnityEngine;
 
 namespace Argyle.UnclesToolkit.Geometry
@@ -178,8 +177,6 @@ namespace Argyle.UnclesToolkit.Geometry
         public Matrix4x4 ToMatrix()
         {
             Matrix4x4 matrix = new Matrix4x4();
-            if(!RotationQuaternion.IsValidRotation())
-                Debug.LogError("invalid rotation");
             matrix.SetTRS(Position, RotationQuaternion, Scale);
 
             return matrix;
