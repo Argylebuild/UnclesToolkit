@@ -229,7 +229,7 @@ namespace Argyle.UnclesToolkit
 						if (frameWatch.LapSoFar() > 1 / Timing.Instance.MinFramerate ||
 						    iterationsPerFrame > _factory._maxIterations)
 						{
-							Debug.Log($"Iterations per frame: {iterationsPerFrame}");
+							//Debug.Log($"Iterations per frame: {iterationsPerFrame}");
 							iterationsPerFrame = 0;
 							await UniTask.NextFrame();
 							frameWatch.Lap();
