@@ -4,62 +4,66 @@ using UnityEngine;
 
 namespace Argyle.UnclesToolkit
 {
-	/// <summary>
-	/// This hashset can be used in foreach loops without risk of exception because the set changes mid loop.
-	/// loop checks out before starting, then checks in when finished. Any change to the loop must happen following WaitForReady.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
 	public class SafeHashset<T> : HashSet<T>
 	{
 		private HashSet<T> _bufferAdd = new HashSet<T>();
 		private HashSet<T> _bufferRemove = new HashSet<T>();
-		
-		public bool Busy { private set; get; }
+        
+		private bool _busy;
 
 		public async UniTask CheckOut()
 		{
-			if(Busy)
-				await WaitForReady();
-			Busy = true;
-		}
-
-		public async void CheckIn()
-		{
-			await UniTask.RunOnThreadPool(() =>
+			while (_busy)
 			{
-				foreach (var item in _bufferAdd)
-					Add(item);
-				_bufferAdd.Clear();
-
-				foreach (var item in _bufferRemove)
-					Remove(item);
-				_bufferRemove.Clear(); 
-			});
-			
-			Busy = false;
+				await UniTask.Yield();
+			}
+			_busy = true;
 		}
 
-
-		public async UniTask WaitForReady()
+		public UniTask CheckIn()
 		{
-			while (Busy)
-				await UniTask.Yield();
+			ProcessBuffers();
+			_busy = false;
+			return UniTask.CompletedTask;
+		}
+
+		private void ProcessBuffers()
+		{
+			foreach (var item in _bufferAdd)
+			{
+				Add(item);
+			}
+			_bufferAdd.Clear();
+
+			foreach (var item in _bufferRemove)
+			{
+				Remove(item);
+			}
+			_bufferRemove.Clear();
 		}
 
 		public void SafeAdd(T item)
 		{
-			if(Busy)
+			if (_busy)
+			{
 				_bufferAdd.Add(item);
+			}
 			else
+			{
 				Add(item);
+			}
 		}
 
 		public void SafeRemove(T item)
 		{
-			if(Busy)
+			if (_busy)
+			{
 				_bufferRemove.Add(item);
+			}
 			else
+			{
 				Remove(item);
+			}
 		}
 	}
 }
