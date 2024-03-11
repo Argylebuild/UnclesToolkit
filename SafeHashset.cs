@@ -11,6 +11,9 @@ namespace Argyle.UnclesToolkit
 	/// <typeparam name="T"></typeparam>
 	public class SafeHashset<T> : HashSet<T>
 	{
+		private HashSet<T> _bufferAdd = new HashSet<T>();
+		private HashSet<T> _bufferRemove = new HashSet<T>();
+		
 		public bool Busy { private set; get; }
 
 		public async UniTask CheckOut()
@@ -20,28 +23,43 @@ namespace Argyle.UnclesToolkit
 			Busy = true;
 		}
 
-		public void CheckIn() => Busy = false;
+		public async void CheckIn()
+		{
+			await UniTask.RunOnThreadPool(() =>
+			{
+				foreach (var item in _bufferAdd)
+					Add(item);
+				_bufferAdd.Clear();
 
+				foreach (var item in _bufferRemove)
+					Remove(item);
+				_bufferRemove.Clear(); 
+			});
+			
+			Busy = false;
+		}
 
 
 		public async UniTask WaitForReady()
 		{
 			while (Busy)
-				await UniTask.Delay(10);
+				await UniTask.Yield();
 		}
 
-		public async void SafeAdd(T item)
+		public void SafeAdd(T item)
 		{
 			if(Busy)
-				await WaitForReady();
-			Add(item);
+				_bufferAdd.Add(item);
+			else
+				Add(item);
 		}
 
-		public async void SafeRemove(T item)
+		public void SafeRemove(T item)
 		{
 			if(Busy)
-				await WaitForReady();
-			Remove(item);
+				_bufferRemove.Add(item);
+			else
+				Remove(item);
 		}
 	}
 }

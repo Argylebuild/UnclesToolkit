@@ -231,13 +231,13 @@ namespace Argyle.UnclesToolkit
 						{
 							//Debug.Log($"Iterations per frame: {iterationsPerFrame}");
 							iterationsPerFrame = 0;
-							await UniTask.NextFrame();
+							await UniTask.Yield();
 							frameWatch.Lap();
 						}
 					}
 					else
 					{
-						await UniTask.NextFrame();
+						await UniTask.Yield();
 					}
 				}
 			}
