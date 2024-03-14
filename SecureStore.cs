@@ -47,7 +47,7 @@ namespace Argyle.UnclesToolkit
 		}
 
 		private static readonly JsonSerializerSettings serializeSettings = new JsonSerializerSettings()
-			{ReferenceLoopHandling = ReferenceLoopHandling.Ignore};
+			{ReferenceLoopHandling = ReferenceLoopHandling.Ignore, Formatting = Formatting.Indented};
 		
 		private static readonly JsonSerializerSettings deserializeSettings = new JsonSerializerSettings()
 		{ 
