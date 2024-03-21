@@ -28,7 +28,7 @@ namespace Argyle.UnclesToolkit
 
 		private QtMachine[] _machines;
 		private readonly int _machineQty;
-		private int _maxIterations = Int32.MaxValue;
+		private int _maxIterations = 100;
 		
 		public bool IsRunning { get; private set; } = false;
 		public bool IsAsync { get; }
@@ -231,13 +231,13 @@ namespace Argyle.UnclesToolkit
 						{
 							//Debug.Log($"Iterations per frame: {iterationsPerFrame}");
 							iterationsPerFrame = 0;
-							await UniTask.NextFrame();
+							await UniTask.Yield();
 							frameWatch.Lap();
 						}
 					}
 					else
 					{
-						await UniTask.NextFrame();
+						await UniTask.Yield();
 					}
 				}
 			}
