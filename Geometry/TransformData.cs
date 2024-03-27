@@ -181,5 +181,15 @@ namespace Argyle.UnclesToolkit.Geometry
 
             return matrix;
         }
+
+        public Transform ToTransform()
+        {
+            Transform tform = new GameObject().transform;
+            tform.localPosition = Position;
+            tform.localRotation = RotationQuaternion;
+            tform.localScale = Scale;
+
+            return tform;
+        }
     }
 }

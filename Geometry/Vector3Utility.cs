@@ -201,6 +201,22 @@ namespace Argyle.UnclesToolkit.Geometry
 
 		public static float[] ToArray(this Vector3 v) => new float[]{ v.z, v.y, v.z };
 
+		public static Vector3 OneToPositive(this Vector3 v3) => (v3 + Vector3.one) / 2;
+		
+		public static Transform Copy(this Transform original)
+		{
+			GameObject go = new GameObject();
+			Transform copy = go.transform;
+			if(original.parent)
+				copy.SetParent(original.parent);
+			copy.SetPositionAndRotation(original.position, original.rotation);
+			copy.localScale = original.localScale;
+			
+			copy.name = original.name + " (copy)";
+			
+			return copy;
+		}
+		
 		#endregion /Vector3
 
 
