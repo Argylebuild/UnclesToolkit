@@ -187,7 +187,7 @@ namespace Argyle.UnclesToolkit.Geometry
 		/// </summary>
 		/// <param name="point"></param>
 		/// <returns></returns>
-		private Vector3Int ClosestCellPosition(Vector3 point)
+		public Vector3Int ClosestCellPosition(Vector3 point)
 		{
 			//quit early if empty
 			if (Cells.Count <= 0)
