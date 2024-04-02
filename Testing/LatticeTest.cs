@@ -58,20 +58,20 @@ namespace Argyle.UnclesToolkit.Testing
             
             
             //visualize boxes
-            foreach (var cell in _lattice.Cells)
-            {
-                GameObject cellVis = Instantiate(_visBoxPrefab, TForm);
-                _visBoxes.Add(cellVis);
-                cellVis.transform.localPosition = _lattice.CellPositionToPoint(cell.Key);
-                cellVis.transform.localRotation = quaternion.identity;
-                cellVis.transform.localScale = Vector3.one * _cellSize;
-                cellVis.name = cell.Key.ToString();
-                var cellTest = cellVis.AddComponent<CellTest>();
-                CellTestDic.Add(cell.Value, cellTest);
-                cellTest.Cell = cell.Value;
-                foreach (var thing in cell.Value.Things)
-                    cellTest._things.Add(thing);
-            }
+            // foreach (var cell in _lattice.Cells)
+            // {
+            //     GameObject cellVis = Instantiate(_visBoxPrefab, TForm);
+            //     _visBoxes.Add(cellVis);
+            //     cellVis.transform.localPosition = _lattice.CellPositionToPoint(cell.Key);
+            //     cellVis.transform.localRotation = quaternion.identity;
+            //     cellVis.transform.localScale = Vector3.one * _cellSize;
+            //     cellVis.name = cell.Key.ToString();
+            //     var cellTest = cellVis.AddComponent<CellTest>();
+            //     CellTestDic.Add(cell.Value, cellTest);
+            //     cellTest.Cell = cell.Value;
+            //     foreach (var thing in cell.Value.Things)
+            //         cellTest._things.Add(thing);
+            // }
             
 
             
@@ -85,7 +85,7 @@ namespace Argyle.UnclesToolkit.Testing
             boundsVis.transform.localRotation = Quaternion.identity;
             
             Debug.Log($"Finished showing. Good spot to Debug. But here's a summary: \n" +
-                      $"Cells: {_lattice.Cells.Count} \n" +
+                      $"Cells: {_lattice.CellCount} \n" +
                       $"");
         }
 
