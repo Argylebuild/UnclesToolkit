@@ -199,7 +199,9 @@ namespace Argyle.UnclesToolkit.Geometry
 				vecPrime.z * zWeight));
 		}
 
-		public static float[] ToArray(this Vector3 v) => new float[]{ v.z, v.y, v.z };
+		public static float[] ToArray(this Vector3 v) => new float[]{ v.x, v.y, v.z };
+		
+		public static List<float> ToList(this Vector3 v) => new List<float>{ v.x, v.y, v.z };
 
 		#endregion /Vector3
 
