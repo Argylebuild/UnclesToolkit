@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Argyle.glTF;
-using Argyle.Utilities;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 

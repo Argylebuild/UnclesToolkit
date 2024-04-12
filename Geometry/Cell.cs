@@ -39,6 +39,11 @@ namespace Argyle.UnclesToolkit.Geometry
 			Things.Add(thing);
 		}
 
+		public void Clear()
+		{
+			Things.Clear();
+		}
+
 		#endregion -----------------/CRUD ====
 		
 	}

@@ -21,7 +21,8 @@ namespace Argyle.UnclesToolkit.Geometry
 		/// All cells stored within this Lattice.
 		/// Note empty cells are not actually stored in memory, but only implied by the grid structure. 
 		/// </summary>
-		public Dictionary<Vector3Int, Cell<T>> Cells { get; } = new Dictionary<Vector3Int, Cell<T>>();
+		private Dictionary<Vector3Int, Cell<T>> Cells { get; } = new Dictionary<Vector3Int, Cell<T>>();
+		private HashSet<T> AllThings { get; } = new HashSet<T>();
 
 		/// <summary>
 		/// A coordinate representing the minimum value in all dimensions of the lattice grid.
@@ -76,6 +77,7 @@ namespace Argyle.UnclesToolkit.Geometry
 					NewCell(cellPosition);
 
 			Cells[cellPosition].Add(thing);
+			AllThings.Add(thing);
 		}
 
 		/// <summary>
@@ -128,11 +130,49 @@ namespace Argyle.UnclesToolkit.Geometry
 		public List<T> GetAtCellPosition(Vector3Int cellPosition) => 
 			Cells.ContainsKey(cellPosition) ? Cells[cellPosition].Things.ToList() : new List<T>();
 
+		
+		public List<T> GetAllObjects() => AllThings.ToList();
+		
 		#endregion ----/Get ==
 
+
+
+		#region == Delete ==----
+
+		/// <summary>
+		/// Clears all references and empties the lattice.
+		/// This does not change the cell size or any other settings.
+		/// Objects are not necessarily destroyed, but their references are removed.
+		/// </summary>
+		public void Clear()
+		{
+			foreach (var cell in Cells.Values)
+			{
+				cell.Clear();
+			}
+			Cells.Clear();
+		}
+
+		#endregion ----/Delete ==
+		
+		
+		
+		
 		#endregion -----------------/CRUD ====
 
 
+
+		#region ==== Stats ====------------------
+
+		public int CellCount => Cells.Count;
+		
+		public int ObjectCount => AllThings.Count;
+
+		#endregion -----------------/Stats ====
+		
+		
+		
+		
 		#region ==== Geometry ====------------------
 
 		/// <summary>
@@ -187,7 +227,7 @@ namespace Argyle.UnclesToolkit.Geometry
 		/// </summary>
 		/// <param name="point"></param>
 		/// <returns></returns>
-		private Vector3Int ClosestCellPosition(Vector3 point)
+		public Vector3Int ClosestCellPosition(Vector3 point)
 		{
 			//quit early if empty
 			if (Cells.Count <= 0)
