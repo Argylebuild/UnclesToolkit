@@ -131,6 +131,17 @@ namespace Argyle.UnclesToolkit.Geometry
 
             return target;
         }
+        
+        public Bounds ApplyInverseTransformationTo(Bounds target)
+        {
+            var min = ApplyInverseTransformationTo(target.min);
+            var max = ApplyInverseTransformationTo(target.max);
+
+            target.min = min;
+            target.max = max;
+
+            return target;
+        }
 
         /// <summary>
         /// Removes the current transformdata from the target. Used to find relative transformation
