@@ -339,6 +339,19 @@ namespace Argyle.UnclesToolkit
 			}
 		}
 
+		/// <summary>
+		/// Modify a color to have a V (HSV: Hue Saturation Value) of 1. 
+		/// </summary>
+		/// <param name="color"></param>
+		/// <returns></returns>
+		public static Color FullBright(this Color color)
+		{
+			Color.RGBToHSV(color, out float h, out float s, out float v);
+			return Color.HSVToRGB(h, s, 1);
+		}
+		
+		
+
 		public static Color RandomColor(string stringSeed = null) => 
 			RandomColorVector(stringSeed).ToColor();
 
