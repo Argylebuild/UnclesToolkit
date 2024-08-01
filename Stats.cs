@@ -126,7 +126,7 @@ namespace Argyle.UnclesToolkit
         }
 
 
-        public static float[,] To2DArray(Tensor tensor, int channel = 0)
+        public static float[,] To2DArray(Tensor tensor, bool flipY = false, int channel = 0)
         {
             var shape = tensor.shape;
             float[,] values = new float[shape.height, shape.width];
@@ -135,7 +135,9 @@ namespace Argyle.UnclesToolkit
             {
                 for (int j = 0; j < shape.width; j++)
                 {
-                    values[i, j] = tensor[0, i, j, channel];
+                    int y = flipY ? shape.height - i - 1 : i;
+                    
+                    values[i, j] = tensor[0, y, j, channel];
                 }
             }
 
