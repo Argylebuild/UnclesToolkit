@@ -76,7 +76,13 @@ namespace Argyle.UnclesToolkit
             }
 
             float avgProbability = sum / qty;
-            return new Hotspot(maxX, maxY, values[maxY, maxX], maxProbability, avgProbability, qty);
+            return new Hotspot(
+                new Vector2Int(maxX,maxY), 
+                new Vector2Int(width - ignoreBorder * 2, height - ignoreBorder*2), 
+                values[maxY, maxX], 
+                maxProbability, 
+                avgProbability, 
+                qty);
         }
 
 
@@ -153,14 +159,19 @@ namespace Argyle.UnclesToolkit
         public float Average { get; }
         public float Qty { get; }
         public Vector2Int Position { get; }
+        public Vector2Int Dimensions { get; }
+        
+        public Vector2 PositionNormalized => new Vector2((float) Position.x / Dimensions.x, (float) Position.y / Dimensions.y);
+        public Vector2 ScreenPosition => new Vector2(PositionNormalized.x * Screen.width, PositionNormalized.y * Screen.height);
 
-        public Hotspot( int x, int y, float value, float probability, float avg, int qty = 1)
+        public Hotspot( Vector2Int coordinates, Vector2Int dimensions, float value, float probability, float avg, int qty = 1)
         {
             Value = value;
             Probability = probability;
             Average = avg;
             Qty = qty;
-            Position = new Vector2Int(x, y);
+            Position = coordinates;
+            Dimensions = dimensions;
         }
     }
 }
