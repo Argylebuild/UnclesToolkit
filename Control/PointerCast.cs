@@ -144,8 +144,6 @@ namespace Argyle.UnclesToolkit.Control
 			
 			if (Physics.Raycast(ray, out hitInfo, _maxDistance, _layerMask))
 			{
-				Debug.Log($"Hit {hitInfo.collider.gameObject.name}");
-				
 				PointerReceiver receiver = hitInfo.collider.GetComponent<PointerReceiver>();
 				if (receiver != null)
 				{
