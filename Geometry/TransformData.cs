@@ -24,11 +24,20 @@ namespace Argyle.UnclesToolkit.Geometry
         /// Builds TransformData based on the local data of the transform. 
         /// </summary>
         /// <param name="tform"></param>
-        public TransformData(Transform tform)
+        public TransformData(Transform tform, bool local = true)
         {
-            position = tform.localPosition;
-            rotationQuaternion = tform.localRotation;
-            scale = tform.localScale;
+            if (local)
+            {
+                position = tform.localPosition;
+                rotationQuaternion = tform.localRotation;
+                scale = tform.localScale;
+            }
+            else
+            {
+                position = tform.position;
+                rotationQuaternion = tform.rotation;
+                scale = tform.localScale;
+            }
         }
         
         public TransformData(Matrix4x4 matrix, float scale = 1)
