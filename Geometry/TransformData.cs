@@ -200,5 +200,17 @@ namespace Argyle.UnclesToolkit.Geometry
 
             return tform;
         }
+
+        public float[] ToFlatArray()
+        {
+            Matrix4x4 matrix = ToMatrix();
+            float[] array = new float[16];
+            for (int i = 0; i < 16; i++)
+            {
+                array[i] = matrix[i];
+            }
+            
+            return array;
+        }
     }
 }
