@@ -171,6 +171,33 @@ namespace Argyle.UnclesToolkit.Geometry
         #endregion /Apply Transformation ==
         
         
+        #region == Direction Transformation ==
+
+        /// <summary>
+        /// Applies the current rotation to a direction vector (ignores translation and scale).
+        /// Like Transform.TransformDirection.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public Vector3 ApplyRotationToDirection(Vector3 direction)
+        {
+            return RotationQuaternion * direction;  // Only applies rotation
+        }
+
+        /// <summary>
+        /// Applies the inverse of the current rotation to a direction vector.
+        /// Like Transform.InverseTransformDirection.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public Vector3 ApplyInverseRotationToDirection(Vector3 direction)
+        {
+            return Quaternion.Inverse(RotationQuaternion) * direction;  // Only applies inverse rotation
+        }
+
+        #endregion /Direction Transformation ==
+        
+        
         /// <summary>
         /// UNTESTED
         /// Generates an inverse transformdata.
